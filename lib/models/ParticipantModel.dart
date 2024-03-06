@@ -37,7 +37,7 @@ Future<Participant> fetchTeam(String uuid) async {
         "participant_id": jsonObj['participant_id'].toString()
       }),
       headers: {
-        'session_token': 'ced36474-9ecd-4cba-9597-74439da3e985',
+        'session_token': 'fe4c78b1-44d5-4770-91e1-36ef80e2118f',
         'Content-Type': 'application/json',
       });
   print("Done");

@@ -1,5 +1,6 @@
 import 'package:event_manager/components/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
+import 'package:event_manager/screens/event/events.dart';
 import 'package:flutter/material.dart';
 
 class loginScreen extends StatefulWidget {
@@ -47,7 +48,13 @@ class _loginScreenState extends State<loginScreen> {
           const SizedBox(
             height: 12.0,
           ),
-          SubmitButton(onTap: () {})
+          SubmitButton(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => EventScreen()));
+            },
+            innerText: "Log In",
+          )
         ],
       ),
     );

@@ -2,9 +2,9 @@ import 'package:event_manager/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
-  EventCard({required name, required eventDate});
-  late final String name;
-  late final String eventDate;
+  EventCard({required this.eventName, required this.eventDate});
+  String eventName;
+  final String eventDate;
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +49,10 @@ class EventCard extends StatelessWidget {
               ],
             ),
           ),
-          const Column(
+          Column(
             children: [
               Text(
-                'BeCrez',
+                eventName,
                 style: TextStyle(fontSize: 40),
               ),
               Text(

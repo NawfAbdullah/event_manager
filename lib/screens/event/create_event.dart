@@ -25,9 +25,12 @@ class _CreateEventState extends State<CreateEvent> {
           firstDate: DateTime.now(),
           lastDate: DateTime(2024, DateTime.now().month + 1),
         ),
-        SubmitButton(onTap: () {
-          print('Taped');
-        })
+        SubmitButton(
+          onTap: () {
+            print('Taped');
+          },
+          innerText: "Add",
+        )
       ],
     );
   }

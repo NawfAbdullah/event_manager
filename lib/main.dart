@@ -34,7 +34,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool isLoggedIn = true;
+  bool isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
