@@ -2,6 +2,7 @@ import 'package:event_manager/screens/event/events.dart';
 import 'package:event_manager/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,20 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   bool isLoggedIn = false;
+  FlutterSecureStorage _storage = FlutterSecureStorage();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isUserLoggedIn();
+  }
+
+  void isUserLoggedIn() async {
+    bool isLogged = await _storage.read(key: 'sessionId') != null;
+    setState(() {
+      isLoggedIn = isLogged;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

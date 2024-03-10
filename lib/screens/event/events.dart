@@ -1,5 +1,7 @@
 import 'package:event_manager/components/EventCard.dart';
+import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/create_event.dart';
+import 'package:event_manager/screens/profile.dart';
 import 'package:event_manager/screens/scanner/results.dart';
 import 'package:event_manager/screens/scanner/scanner.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +21,7 @@ class _EventScreenState extends State<EventScreen> {
     Scanner(),
     CreateEvent(),
     Placeholder(),
-    ResultScreen(
-        uuid:
-            '{"event_id": "65e70e3de866130d9ecf0331","sub_event_id": "65e71058565383b93a39ef9e","participant_id": "65e718aa55f9d2aed96f2b57"}')
+    Profile(),
   ];
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,18 +49,58 @@ class _EventScreenState extends State<EventScreen> {
   }
 }
 
-class MainEvent extends StatelessWidget {
+class MainEvent extends StatefulWidget {
   const MainEvent({
     super.key,
   });
 
   @override
+  State<MainEvent> createState() => _MainEventState();
+}
+
+class _MainEventState extends State<MainEvent> {
+  Future<List<Map<String, dynamic>>> events = fetchAllEvents();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // return FutureBuilder(
+    //     future: events,
+    //     builder: (context, snapshot) {
+    //       switch (snapshot.connectionState) {
+    //         case ConnectionState.waiting:
+    //           return const Center(child: CircularProgressIndicator());
+    //         default:
+    //           if (snapshot.hasData) {
+    //             print('xxxxxxxxxxvrsgrdfgrdf');
+    //             print(snapshot.data);
+    //             return ListView.builder(
+    //                 itemCount: snapshot.data?.length,
+    //                 itemBuilder: (context, index) {
+    //                   return EventCard(
+    //                       eventName: snapshot.data?[index]['name'] ?? '',
+    //                       eventDate:
+    //                           DateTime(snapshot.data?[index]['date_from']) ??
+    //                               DateTime.now());
+    //                 });
+    //           } else {
+    //             print(events);
+    //             print('ddddddddd');
+    //             print(snapshot.data);
+    //             return Text('No Event Available');
+    //           }
+    //       }
+    //     });
+
     return ListView(
       children: [
-        EventCard(eventName: 'Becrez', eventDate: '10'),
-        EventCard(eventName: 'Arcane', eventDate: '10'),
-        EventCard(eventName: 'Cresathon', eventDate: '10'),
+        EventCard(eventName: 'Becrez', eventDate: DateTime.now()),
+        EventCard(eventName: 'Arcane', eventDate: DateTime.now()),
+        EventCard(eventName: 'Cresathon', eventDate: DateTime.now()),
       ],
     );
   }
