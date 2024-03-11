@@ -59,7 +59,7 @@ class MainEvent extends StatefulWidget {
 }
 
 class _MainEventState extends State<MainEvent> {
-  Future<List<Map<String, dynamic>>> events = fetchAllEvents();
+  Future<List<EventModel>> events = fetchAllEvents();
   @override
   void initState() {
     // TODO: implement initState
@@ -68,40 +68,44 @@ class _MainEventState extends State<MainEvent> {
 
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder(
-    //     future: events,
-    //     builder: (context, snapshot) {
-    //       switch (snapshot.connectionState) {
-    //         case ConnectionState.waiting:
-    //           return const Center(child: CircularProgressIndicator());
-    //         default:
-    //           if (snapshot.hasData) {
-    //             print('xxxxxxxxxxvrsgrdfgrdf');
-    //             print(snapshot.data);
-    //             return ListView.builder(
-    //                 itemCount: snapshot.data?.length,
-    //                 itemBuilder: (context, index) {
-    //                   return EventCard(
-    //                       eventName: snapshot.data?[index]['name'] ?? '',
-    //                       eventDate:
-    //                           DateTime(snapshot.data?[index]['date_from']) ??
-    //                               DateTime.now());
-    //                 });
-    //           } else {
-    //             print(events);
-    //             print('ddddddddd');
-    //             print(snapshot.data);
-    //             return Text('No Event Available');
-    //           }
-    //       }
-    //     });
+    return FutureBuilder(
+        future: events,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const Center(child: CircularProgressIndicator());
+            default:
+              if (snapshot.hasError) {
+                print(snapshot.error);
+                return const Center(
+                  child: Text('An error has occurred!'),
+                );
+              } else if (snapshot.hasData) {
+                print('xxxxxxxxxxvrsgrdfgrdf');
+                print(snapshot.data);
+                return ListView.builder(
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      return EventCard(
+                        eventName: snapshot.data?[index].name ?? '',
+                        eventDate:
+                            snapshot.data?[index].start ?? DateTime.now(),
+                        eventEndDate:
+                            snapshot.data?[index].end ?? DateTime.now(),
+                      );
+                    });
+              } else {
+                return CircularProgressIndicator();
+              }
+          }
+        });
 
-    return ListView(
-      children: [
-        EventCard(eventName: 'Becrez', eventDate: DateTime.now()),
-        EventCard(eventName: 'Arcane', eventDate: DateTime.now()),
-        EventCard(eventName: 'Cresathon', eventDate: DateTime.now()),
-      ],
-    );
+    // return ListView(
+    //   children: [
+    //     EventCard(eventName: 'Becrez', eventDate: DateTime.now()),
+    //     EventCard(eventName: 'Arcane', eventDate: DateTime.now()),
+    //     EventCard(eventName: 'Cresathon', eventDate: DateTime.now()),
+    //   ],
+    // );
   }
 }

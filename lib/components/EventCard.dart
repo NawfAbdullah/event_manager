@@ -3,9 +3,13 @@ import 'package:event_manager/screens/event/event.dart';
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
-  EventCard({required this.eventName, required this.eventDate});
+  EventCard(
+      {required this.eventName,
+      required this.eventDate,
+      required this.eventEndDate});
   final String eventName;
   final DateTime eventDate;
+  final DateTime eventEndDate;
   List<String> months = [
     'Jan',
     'Feb',
@@ -42,54 +46,38 @@ class EventCard extends StatelessWidget {
         ),
         height: 100,
         width: MediaQuery.sizeOf(context).width - 15,
-        padding: EdgeInsets.all(5),
         margin: EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 95,
+              width: 5,
               height: 95,
               decoration: BoxDecoration(
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 121, 94, 217),
                   borderRadius: BorderRadius.all(Radius.circular(5))),
               padding: EdgeInsets.all(10),
+            ),
+            Container(
+              padding: EdgeInsets.all(5),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    eventDate.day.toString(),
-                    style: const TextStyle(
-                      fontSize: 30,
-                      decoration: TextDecoration.none,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black87,
-                    ),
+                    eventName,
+                    style: TextStyle(fontSize: 30),
                   ),
                   Text(
-                    months[eventDate.month],
+                    '${eventDate.day} ${months[eventDate.month]} - ${eventEndDate.day} ${months[eventEndDate.month]}',
                     style: TextStyle(
-                      fontSize: 15,
-                      decoration: TextDecoration.none,
-                      color: Colors.black87,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 158, 148, 148),
                     ),
+                    textAlign: TextAlign.left,
                   ),
                 ],
               ),
-            ),
-            Column(
-              children: [
-                Text(
-                  eventName,
-                  style: TextStyle(fontSize: 40),
-                ),
-                Text(
-                  '9:00 - 15:00',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
             )
           ],
         ),

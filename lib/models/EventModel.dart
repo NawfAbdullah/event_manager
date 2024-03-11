@@ -9,25 +9,46 @@ class EventModel {
   final DateTime start;
   final DateTime end;
   final String department;
+  final List<SubEventModel> subevents = [];
 
-  EventModel(
-      {required this.id,
-      required this.name,
-      required this.start,
-      required this.end,
-      required this.department});
+  EventModel({
+    required this.id,
+    required this.name,
+    required this.start,
+    required this.end,
+    required this.department,
+  });
 
-  EventModel.fromJSON(Map<String, dynamic> json)
+  void AddSubEvent(SubEventModel x) {
+    subevents.add(x);
+  }
+
+  EventModel.fromJson(Map<String, dynamic> json)
       : name = json['name'],
-        start = DateTime(json['date_from']),
-        end = DateTime(json['date_to']),
+        start = DateTime.parse(json['date_from']),
+        end = DateTime.parse(json['date_to']),
         id = json['_id'],
         department = json['department'];
 }
 
-Future<List<Map<String, dynamic>>> fetchAllEvents() async {
-  FlutterSecureStorage _storage = FlutterSecureStorage();
-  final session = await _storage.read(key: 'sessionId');
+List<EventModel> parsePhotos(String responseBody) {
+  final parsed =
+      (jsonDecode(responseBody) as List).cast<Map<String, dynamic>>();
+  List<EventModel> finale = [];
+  for (var i = 0; i < parsed.length; i++) {
+    try {
+      EventModel x = EventModel.fromJson(parsed[i]);
+      finale.add(x);
+    } catch (err) {
+      print(err);
+    }
+  }
+  return finale;
+}
+
+Future<List<EventModel>> fetchAllEvents() async {
+  const FlutterSecureStorage storage = FlutterSecureStorage();
+  final session = await storage.read(key: 'sessionId');
   final response = await get(
       Uri.parse(
           'https://event-management-backend.up.railway.app/api/event/get-all'),
@@ -35,28 +56,9 @@ Future<List<Map<String, dynamic>>> fetchAllEvents() async {
         'session_token': session ?? '',
       });
 
-  print('dddddddddddddddddddddddddddddddddddddddddd');
-  print(response.statusCode);
-  print(response.body);
   if (response.statusCode == 200) {
-    List<Map<String, dynamic>> x = jsonDecode(response.body);
-    print(x[0]['name']);
-    List<EventModel> temp = [];
-    // print('outsideloop');
-    // for (var element in x) {
-    //   print('entnter');
-    //   EventModel newPart = EventModel.fromJSON(element);
-    //   print('vvvvvvvvvvvvvv');
-    //   print(newPart);
-    //   print('printed new partic');
-    //   temp.add(newPart);
-    // }
-    print(
-        'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-    // print(temp);
-    return x;
+    return parsePhotos(response.body);
   } else {
-    print('exited');
     throw Exception(response.body);
   }
 }
@@ -66,4 +68,8 @@ class SubEventModel {
   final String eventManager;
   List<String> participants = [];
   SubEventModel({required this.name, required this.eventManager});
+
+  SubEventModel.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        eventManager = '';
 }
