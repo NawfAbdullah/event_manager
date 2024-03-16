@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:event_manager/components/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/screens/event/event.dart';
@@ -48,11 +47,6 @@ class _CreateEventState extends State<CreateEvent> {
           decoration:
               kInputdecoration.copyWith(labelText: 'Department', hintText: ''),
         ),
-        // DatePickerDialog(
-        //   initialDate: DateTime.now(),
-        //   firstDate: DateTime.now(),
-        //   lastDate: DateTime(2024, DateTime.now().month + 1),
-        // ),
         SizedBox(
           height: 10,
         ),
@@ -69,7 +63,6 @@ class _CreateEventState extends State<CreateEvent> {
         SizedBox(
           height: 5,
         ),
-
         SubmitButton(
           onTap: () async {
             final id = await storage.read(key: "sessionId");
@@ -89,9 +82,9 @@ class _CreateEventState extends State<CreateEvent> {
                 });
             if (response.statusCode == 200) {
               print(response.body);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      Event(EventId: '1234', EventName: 'Becrez')));
+              // Navigator.of(context).push(MaterialPageRoute(
+              //     builder: (context) =>
+              //         Event(EventId: '1234', EventName: 'Becrez')));
             } else {
               print(response.body);
               throw Exception('Something went wrong');

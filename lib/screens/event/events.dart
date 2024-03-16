@@ -17,10 +17,10 @@ class _EventScreenState extends State<EventScreen> {
   @override
   int current_index = 0;
   List<Widget> screens = [
-    MainEvent(),
+    MyEvents(),
     Scanner(),
     CreateEvent(),
-    Placeholder(),
+    MainEvent(),
     Profile(),
   ];
   Widget build(BuildContext context) {
@@ -87,12 +87,13 @@ class _MainEventState extends State<MainEvent> {
                     itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
                       return EventCard(
-                        eventName: snapshot.data?[index].name ?? '',
-                        eventDate:
-                            snapshot.data?[index].start ?? DateTime.now(),
-                        eventEndDate:
-                            snapshot.data?[index].end ?? DateTime.now(),
-                      );
+                          eventModel: snapshot.data?[index] ??
+                              EventModel(
+                                  id: '',
+                                  name: '',
+                                  start: DateTime.now(),
+                                  end: DateTime.now(),
+                                  department: ''));
                     });
               } else {
                 return CircularProgressIndicator();
@@ -107,5 +108,19 @@ class _MainEventState extends State<MainEvent> {
     //     EventCard(eventName: 'Cresathon', eventDate: DateTime.now()),
     //   ],
     // );
+  }
+}
+
+class MyEvents extends StatefulWidget {
+  const MyEvents({super.key});
+
+  @override
+  State<MyEvents> createState() => _MyEventsState();
+}
+
+class _MyEventsState extends State<MyEvents> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

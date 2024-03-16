@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:event_manager/components/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/screens/event/events.dart';

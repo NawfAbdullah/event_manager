@@ -1,37 +1,14 @@
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
-import 'package:event_manager/screens/event/event.dart';
 import 'package:flutter/material.dart';
 
-class EventCard extends StatelessWidget {
-  EventCard({required this.eventModel});
-  final EventModel eventModel;
-  // final String eventName;
-  // final DateTime eventDate;
-  // final DateTime eventEndDate;
-  List<String> months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ];
+class SubEventCard extends StatelessWidget {
+  const SubEventCard({super.key, required this.subEvent});
+  final SubEventModel subEvent;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Event(
-                  eventModel: eventModel,
-                )));
-      },
+      onTap: () {},
       child: Container(
         decoration: kCardDecoration.copyWith(
           color: Colors.white,
@@ -65,16 +42,8 @@ class EventCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    eventModel.name,
+                    subEvent.name,
                     style: TextStyle(fontSize: 30),
-                  ),
-                  Text(
-                    '${eventModel.start.day} ${months[eventModel.start.month]} - ${eventModel.end.day} ${months[eventModel.end.month]}',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromARGB(255, 158, 148, 148),
-                    ),
-                    textAlign: TextAlign.left,
                   ),
                 ],
               ),

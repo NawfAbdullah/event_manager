@@ -1,9 +1,12 @@
+import 'package:event_manager/models/EventModel.dart';
+import 'package:event_manager/screens/event/subevent.dart';
 import 'package:flutter/material.dart';
 
 class Event extends StatefulWidget {
-  Event({super.key, required this.EventId, required this.EventName});
-  final String EventId;
-  final String EventName;
+  Event({super.key, required this.eventModel});
+  // final String EventId;
+  // final String EventName;
+  final EventModel eventModel;
   @override
   State<Event> createState() => _EventState();
 }
@@ -11,16 +14,35 @@ class Event extends StatefulWidget {
 class _EventState extends State<Event> {
   @override
   late List<Widget> screens;
+
+  late final Future<EventModel> fullEvent;
   int curr_index = 0;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    fullEvent = fetchEvent(widget.eventModel);
     screens = [
-      Container(
-        child: Text(widget.EventName),
+      FutureBuilder(
+        future: fullEvent,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const CircularProgressIndicator();
+            default:
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              } else if (snapshot.hasData) {
+                return SubEvent(
+                  subEvents: widget.eventModel.subevents,
+                  event: widget.eventModel,
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+          }
+        },
       ),
-      Placeholder(),
+      // ,
       Placeholder(),
       Placeholder(),
     ];
@@ -29,7 +51,7 @@ class _EventState extends State<Event> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.EventName),
+        title: Text(widget.eventModel.name),
       ),
       body: screens[curr_index],
       bottomNavigationBar: BottomNavigationBar(
@@ -49,8 +71,6 @@ class _EventState extends State<Event> {
                 label: 'organizers'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.subscript), label: 'Bills'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.insights), label: 'Insights'),
           ]),
     );
   }
