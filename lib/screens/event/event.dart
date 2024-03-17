@@ -1,4 +1,5 @@
 import 'package:event_manager/models/EventModel.dart';
+import 'package:event_manager/screens/event/requests_list.dart';
 import 'package:event_manager/screens/event/subevent.dart';
 import 'package:event_manager/screens/requests/list_of_requests.dart';
 import 'package:flutter/material.dart';
@@ -57,9 +58,11 @@ class _EventState extends State<Event> {
       // ,
       Placeholder(),
       Placeholder(),
-      id == widget.eventModel.studentId
-          ? ListOfRequests()
-          : Text('Access Restricted')
+      Container(
+        child: id == widget.eventModel.studentId
+            ? RequestList(eventId: widget.eventModel.id)
+            : Text('Access Restricted'),
+      )
     ];
   }
 
