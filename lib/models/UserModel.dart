@@ -10,12 +10,31 @@ class User {
   late String role;
   late String sessionId;
   late String id;
+  late List<dynamic> myEvents = [];
 
   User.fromJSON(Map<String, dynamic> json)
       : name = json['name'] ?? '',
         email = json['email'],
         role = json['type'],
-        id = json['_id'];
+        id = json['_id'],
+        myEvents = json["events_as_studentcoordinator"] +
+            json["events_as_eventmanager"] +
+            json["events_as_treasurer"] +
+            json["events_as_volunteer"];
+  // myEvents = jsonDecode(json["events_as_studentcoordinator"]) as List;
+}
+
+Future<void> saveCurrentUser(User user) async {
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  try {
+    await storage.write(key: 'user_id', value: user.id);
+    await storage.write(key: 'name', value: user.name);
+    await storage.write(key: 'email', value: user.email);
+    await storage.write(key: 'role', value: user.role);
+    await storage.write(key: 'my_events', value: user.myEvents.toString());
+  } catch (err) {
+    print(err);
+  }
 }
 
 Future<User> getUser() async {
@@ -33,6 +52,7 @@ Future<User> getUser() async {
       });
   if (response.statusCode == 200) {
     User user = User.fromJSON(jsonDecode(response.body));
+    await saveCurrentUser(user);
     return user;
   } else {
     throw Exception(response.body);

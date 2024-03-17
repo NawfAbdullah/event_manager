@@ -1,6 +1,8 @@
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/subevent.dart';
+import 'package:event_manager/screens/requests/list_of_requests.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Event extends StatefulWidget {
   Event({super.key, required this.eventModel});
@@ -16,10 +18,20 @@ class _EventState extends State<Event> {
   late List<Widget> screens;
 
   late final Future<EventModel> fullEvent;
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  String id = '';
   int curr_index = 0;
+  Future<void> setId() async {
+    String? userId = await storage.read(key: 'user_id');
+    setState(() {
+      id = userId ?? '';
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    setId();
     fullEvent = fetchEvent(widget.eventModel);
     screens = [
       FutureBuilder(
@@ -45,6 +57,9 @@ class _EventState extends State<Event> {
       // ,
       Placeholder(),
       Placeholder(),
+      id == widget.eventModel.studentId
+          ? ListOfRequests()
+          : Text('Access Restricted')
     ];
   }
 
@@ -71,6 +86,14 @@ class _EventState extends State<Event> {
                 label: 'organizers'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.subscript), label: 'Bills'),
+            id == widget.eventModel.studentId
+                ? BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.request_page_rounded,
+                    ),
+                    label: 'Requests')
+                : BottomNavigationBarItem(
+                    icon: Icon(Icons.lock), label: 'Locked')
           ]),
     );
   }

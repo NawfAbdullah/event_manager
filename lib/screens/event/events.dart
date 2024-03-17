@@ -89,25 +89,18 @@ class _MainEventState extends State<MainEvent> {
                       return EventCard(
                           eventModel: snapshot.data?[index] ??
                               EventModel(
-                                  id: '',
-                                  name: '',
-                                  start: DateTime.now(),
-                                  end: DateTime.now(),
-                                  department: ''));
+                                id: '',
+                                name: '',
+                                start: DateTime.now(),
+                                end: DateTime.now(),
+                                department: '',
+                              ));
                     });
               } else {
                 return CircularProgressIndicator();
               }
           }
         });
-
-    // return ListView(
-    //   children: [
-    //     EventCard(eventName: 'Becrez', eventDate: DateTime.now()),
-    //     EventCard(eventName: 'Arcane', eventDate: DateTime.now()),
-    //     EventCard(eventName: 'Cresathon', eventDate: DateTime.now()),
-    //   ],
-    // );
   }
 }
 
@@ -119,8 +112,41 @@ class MyEvents extends StatefulWidget {
 }
 
 class _MyEventsState extends State<MyEvents> {
+  Future<List<EventModel>> events = fetchMyEvents();
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return FutureBuilder(
+        future: events,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const Center(child: CircularProgressIndicator());
+            default:
+              if (snapshot.hasError) {
+                print(snapshot.error);
+                return const Center(
+                  child: Text('An error has occurred!'),
+                );
+              } else if (snapshot.hasData) {
+                print('xxxxxxxxxxvrsgrdfgrdf');
+                print(snapshot.data);
+                return ListView.builder(
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      return EventCard(
+                          eventModel: snapshot.data?[index] ??
+                              EventModel(
+                                id: '',
+                                name: '',
+                                start: DateTime.now(),
+                                end: DateTime.now(),
+                                department: '',
+                              ));
+                    });
+              } else {
+                return CircularProgressIndicator();
+              }
+          }
+        });
   }
 }

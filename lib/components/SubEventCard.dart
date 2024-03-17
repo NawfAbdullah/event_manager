@@ -1,14 +1,31 @@
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
+import 'package:event_manager/screens/requests/RequestPage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SubEventCard extends StatelessWidget {
-  const SubEventCard({super.key, required this.subEvent});
+  SubEventCard({super.key, required this.subEvent, required this.event});
+  FlutterSecureStorage storage = FlutterSecureStorage();
   final SubEventModel subEvent;
+  final EventModel event;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () async {
+        String? eventsString = await storage.read(key: 'my_events');
+        List<String> myEvents = parseStringToList(eventsString ?? '[a,b]');
+        if (myEvents.contains(subEvent.id) || myEvents.contains(event.id)) {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => Text('HAve access')));
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) {
+              return RequestPage(eventId: event.id, subEventId: subEvent.id);
+            },
+          ));
+        }
+      },
       child: Container(
         decoration: kCardDecoration.copyWith(
           color: Colors.white,

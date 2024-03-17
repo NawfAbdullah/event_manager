@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:event_manager/components/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
+import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/event/events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -89,6 +90,7 @@ class _loginScreenState extends State<loginScreen> {
                   key: 'sessionId',
                   value: body['session_token'],
                 );
+                User user = await getUser();
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => EventScreen()));
               } else {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:event_manager/screens/event/event.dart';
 import 'package:event_manager/screens/event/events.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,14 +10,17 @@ class EventModel {
   final DateTime start;
   final DateTime end;
   final String department;
+  String studentId = '';
+  List volunteer = [];
   List<SubEventModel> subevents = [];
 
-  EventModel(
-      {required this.id,
-      required this.name,
-      required this.start,
-      required this.end,
-      required this.department});
+  EventModel({
+    required this.id,
+    required this.name,
+    required this.start,
+    required this.end,
+    required this.department,
+  });
 
   void AddSubEvent(SubEventModel x) {
     subevents.add(x);
@@ -80,9 +82,16 @@ Future<EventModel> fetchEvent(EventModel event) async {
     final parsed = jsonDecode(response.body);
     event.subevents = [];
     for (var i = 0; i < parsed["sub_events"].length; i++) {
-      SubEventModel x = SubEventModel.fromJson(parsed['sub_events'][i]);
-      event.AddSubEvent(x);
+      try {
+        SubEventModel x = SubEventModel.fromJson(parsed['sub_events'][i]);
+        event.AddSubEvent(x);
+      } catch (e) {
+        print('it is the error');
+        print(e);
+      }
     }
+    event.studentId = parsed["student_coordinator"]?["_id"] ?? '';
+    event.volunteer = parsed["volunteers"] ?? [];
     return event;
   } else {
     print(response.body);
@@ -93,12 +102,22 @@ Future<EventModel> fetchEvent(EventModel event) async {
 Future<List<EventModel>> fetchMyEvents() async {
   const FlutterSecureStorage storage = FlutterSecureStorage();
   final session = await storage.read(key: 'sessionId');
-  final List myEvents = jsonEncode(storage.read(key: 'my_events')) as List;
+  final myEventStringIds = await storage.read(key: 'my_events');
+  // print('irritate');
+  // print(myEventStringIds);
+  List<String> parsedIds = [];
+  try {
+    parsedIds = parseStringToList(myEventStringIds ?? '[]');
+  } catch (err) {
+    print('here is the error');
+    print(err);
+  }
   List<EventModel> currentEvent = [];
-  for (var i = 0; i < myEvents.length; i++) {
+  for (var i = 0; i < parsedIds.length; i++) {
+    print(parsedIds[i]);
     final response = await get(
         Uri.parse(
-            'https://event-management-backend.up.railway.app/api/event/get-one?id=${myEvents[i].toString()}'),
+            'https://event-management-backend.up.railway.app/api/event/get-one?id=${parsedIds[i] ?? ''}'),
         headers: {
           'session_token': session ?? '',
         });
@@ -108,6 +127,7 @@ Future<List<EventModel>> fetchMyEvents() async {
       EventModel myEvent = EventModel.fromJson(parsed);
       currentEvent.add(myEvent);
     } else {
+      print('here is another error');
       print(response.body);
       throw Exception(response.body);
     }
@@ -121,8 +141,11 @@ class SubEventModel {
   final String eventManager;
   final String id;
   List<String> participants = [];
-  SubEventModel(
-      {required this.name, required this.eventManager, required this.id});
+  SubEventModel({
+    required this.name,
+    required this.eventManager,
+    required this.id,
+  });
 
   SubEventModel.fromJson(Map<String, dynamic> json)
       : name = json['name'],
@@ -130,29 +153,11 @@ class SubEventModel {
         eventManager = '';
 }
 
+List<String> parseStringToList(String input) {
+  // Remove '[' and ']' characters from the input string
+  String trimmedString = input.substring(1, input.length - 1);
 
-
-
-// {
-//     "_id": "65edb94c02a225907684602b",
-//     "name": "Min Blogging Shit",
-//     "date_from": "2024-03-11T00:00:00.000Z",
-//     "date_to": "2024-03-13T00:00:00.000Z",
-//     "department": "cse",
-//     "student_coordinator": {
-//         "_id": "65edb85f02a225907684601f",
-//         "type": "studentcoordinator",
-//         "email": "arbitary@gmail.com",
-//         "name": "Arbitary"
-//     },
-//     "treasurer": null,
-//     "volunteers": [],
-//     "sub_events": [
-//         {
-//             "_id": "65ef315102a225907684611b",
-//             "name": "Mind Hunter",
-//             "participants": [],
-//             "bills": []
-//         }
-//     ]
-// }
+  // Split the trimmed string by ', ' to get individual elements
+  List<String> elements = trimmedString.split(', ');
+  return elements;
+}
