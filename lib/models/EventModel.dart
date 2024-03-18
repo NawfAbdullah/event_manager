@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:event_manager/screens/event/event.dart';
-import 'package:event_manager/screens/event/events.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
@@ -13,7 +11,7 @@ class EventModel {
   String studentId = '';
   List volunteer = [];
   List<SubEventModel> subevents = [];
-
+  String coordinatorName = '';
   EventModel({
     required this.id,
     required this.name,
@@ -91,6 +89,8 @@ Future<EventModel> fetchEvent(EventModel event) async {
       }
     }
     event.studentId = parsed["student_coordinator"]?["_id"] ?? '';
+    event.coordinatorName = parsed["student_coordinator"]?["name"] ?? '';
+    print(parsed);
     event.volunteer = parsed["volunteers"] ?? [];
     return event;
   } else {
@@ -103,8 +103,7 @@ Future<List<EventModel>> fetchMyEvents() async {
   const FlutterSecureStorage storage = FlutterSecureStorage();
   final session = await storage.read(key: 'sessionId');
   final myEventStringIds = await storage.read(key: 'my_events');
-  // print('irritate');
-  // print(myEventStringIds);
+
   List<String> parsedIds = [];
   try {
     parsedIds = parseStringToList(myEventStringIds ?? '[]');
@@ -118,7 +117,7 @@ Future<List<EventModel>> fetchMyEvents() async {
       print(parsedIds[i]);
       final response = await get(
           Uri.parse(
-              'https://event-management-backend.up.railway.app/api/event/get-one?id=${parsedIds[i] ?? ''}'),
+              'https://event-management-backend.up.railway.app/api/event/get-one?id=${parsedIds[i]}'),
           headers: {
             'session_token': session ?? '',
           });

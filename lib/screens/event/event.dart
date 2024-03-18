@@ -1,4 +1,5 @@
 import 'package:event_manager/models/EventModel.dart';
+import 'package:event_manager/screens/event/list_of_members.dart';
 import 'package:event_manager/screens/event/requests_list.dart';
 import 'package:event_manager/screens/event/subevent.dart';
 import 'package:event_manager/screens/requests/list_of_requests.dart';
@@ -6,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Event extends StatefulWidget {
-  Event({super.key, required this.eventModel});
-  // final String EventId;
-  // final String EventName;
+  const Event({super.key, required this.eventModel});
   final EventModel eventModel;
   @override
   State<Event> createState() => _EventState();
@@ -56,8 +55,7 @@ class _EventState extends State<Event> {
         },
       ),
       // ,
-      Placeholder(),
-      Placeholder(),
+      ListOfMembers(event: widget.eventModel),
       Container(
         child: id == widget.eventModel.studentId
             ? RequestList(eventId: widget.eventModel.id)
@@ -87,8 +85,6 @@ class _EventState extends State<Event> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.supervised_user_circle_sharp),
                 label: 'organizers'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.subscript), label: 'Bills'),
             id == widget.eventModel.studentId
                 ? BottomNavigationBarItem(
                     icon: Icon(

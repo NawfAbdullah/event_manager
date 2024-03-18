@@ -9,9 +9,9 @@ class RequestModel {
   final String forEvent;
   final String toSubEvent;
   final String position;
-  final String status;
+  String status;
   final DateTime requestedOn;
-  const RequestModel(
+  RequestModel(
       {required this.id,
       required this.requestedBy,
       required this.forEvent,
@@ -38,6 +38,35 @@ Future<List<RequestModel>> getAllRequests(String eventId) async {
   final response = await get(
       Uri.parse(
         'https://event-management-backend.up.railway.app/api/request/get-all-event?event_id=${eventId}',
+      ),
+      headers: {'session_token': id ?? ''});
+  if (response.statusCode == 200) {
+    final parsedJson = jsonDecode(response.body);
+
+    List<RequestModel> requestList = [];
+    for (var i = 0; i < parsedJson.length; i++) {
+      try {
+        RequestModel requestModel = RequestModel.fromJSON(parsedJson[i]);
+        requestList.add(requestModel);
+      } catch (e) {
+        print('error is here i guess');
+        print(e);
+      }
+    }
+    return requestList;
+  } else {
+    print('idhu inga');
+    print(response.body);
+    return [];
+  }
+}
+
+Future<List<RequestModel>> getMyRequests() async {
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  final id = await storage.read(key: 'sessionId');
+  final response = await get(
+      Uri.parse(
+        'https://event-management-backend.up.railway.app/api/request/get-all',
       ),
       headers: {'session_token': id ?? ''});
   if (response.statusCode == 200) {

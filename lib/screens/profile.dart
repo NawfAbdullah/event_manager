@@ -1,4 +1,6 @@
+import 'package:event_manager/components/RequestCard.dart';
 import 'package:event_manager/components/SubmitButton.dart';
+import 'package:event_manager/models/RequestModel.dart';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/changepassword.dart';
 import 'package:event_manager/screens/login.dart';
@@ -8,35 +10,41 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class Profile extends StatelessWidget {
   Profile({super.key});
   Future<User> user = getUser();
+  Future<List<RequestModel>> request = getMyRequests();
   @override
   Widget build(BuildContext context) {
     FlutterSecureStorage storage = FlutterSecureStorage();
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          'CRES DAYS',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 30,
-          ),
-        ),
         FutureBuilder(
             future: user,
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 default:
                   if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   } else if (snapshot.hasData) {
                     return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Name:${snapshot.data?.name}'),
-                        Text('Role: ${snapshot.data?.role}')
+                        Text(
+                          'Hi,${snapshot.data?.name}',
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(fontSize: 40),
+                        ),
+                        Text(
+                          '${snapshot.data?.role}',
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 25,
+                          ),
+                        )
                       ],
                     );
                   } else {
@@ -44,6 +52,44 @@ class Profile extends StatelessWidget {
                   }
               }
             }),
+        Text(
+          'My Requests',
+          style: TextStyle(fontSize: 25),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: FutureBuilder(
+            future: request,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return CircularProgressIndicator();
+                default:
+                  if (snapshot.hasError) {
+                    return throw Exception(snapshot.error.toString());
+                  } else if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index) {
+                        return RequestCard(
+                            requestModel: snapshot.data?[index] ??
+                                RequestModel(
+                                    id: '',
+                                    requestedBy: '',
+                                    forEvent: '',
+                                    toSubEvent: '',
+                                    position: '',
+                                    status: '',
+                                    requestedOn: DateTime.now()));
+                      },
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+              }
+            },
+          ),
+        ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.end,

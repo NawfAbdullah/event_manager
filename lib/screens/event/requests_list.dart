@@ -13,7 +13,7 @@ class RequestList extends StatelessWidget {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           default:
             if (snapshot.hasError) {
               print('bulu bulu bulu');
@@ -25,7 +25,7 @@ class RequestList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   if (snapshot.data?.length == 0) {
                     return Text('No pending requests');
-                  } else if (snapshot.data?[index].status == "waiting") {
+                  } else {
                     return RequestCard(
                         requestModel: snapshot.data?[index] ??
                             RequestModel(

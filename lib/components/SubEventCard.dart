@@ -1,5 +1,6 @@
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
+import 'package:event_manager/screens/event/sub_event/main_sub_event.dart';
 import 'package:event_manager/screens/requests/RequestPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -16,8 +17,11 @@ class SubEventCard extends StatelessWidget {
         String? eventsString = await storage.read(key: 'my_events');
         List<String> myEvents = parseStringToList(eventsString ?? '[a,b]');
         if (myEvents.contains(subEvent.id) || myEvents.contains(event.id)) {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => Text('HAve access')));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SubEventScaffold(
+                    subEvent: subEvent,
+                    eventModel: event,
+                  )));
         } else {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) {

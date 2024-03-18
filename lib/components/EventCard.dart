@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 class EventCard extends StatelessWidget {
   EventCard({required this.eventModel});
   final EventModel eventModel;
-  // final String eventName;
-  // final DateTime eventDate;
-  // final DateTime eventEndDate;
   List<String> months = [
     'Jan',
     'Feb',

@@ -16,7 +16,7 @@ class SubmitButton extends StatelessWidget {
           style: kSendButtonTextStyle,
           textAlign: TextAlign.center,
         ),
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
             color: Colors.lightBlueAccent,
             borderRadius: BorderRadius.all(Radius.circular(32))),

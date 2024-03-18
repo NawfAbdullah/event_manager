@@ -5,9 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
-class RequestCard extends StatelessWidget {
+class RequestCard extends StatefulWidget {
   const RequestCard({super.key, required this.requestModel});
   final RequestModel requestModel;
+
+  @override
+  State<RequestCard> createState() => _RequestCardState();
+}
+
+class _RequestCardState extends State<RequestCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,55 +38,71 @@ class RequestCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${requestModel.requestedBy} is requested to be in ${requestModel.forEvent} as a ${requestModel.position} in ${requestModel.toSubEvent}',
+            '${widget.requestModel.requestedBy} is requested to be in ${widget.requestModel.forEvent} as a ${widget.requestModel.position} in ${widget.requestModel.toSubEvent}',
             style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircularButton(
-                icon: const Icon(Icons.close),
-                onTap: () async {
-                  FlutterSecureStorage secureStorage = FlutterSecureStorage();
-                  final id = await secureStorage.read(key: 'sessionId');
-                  final response = await post(
-                      Uri.parse(
-                          'https://event-management-backend.up.railway.app/api/request/reject-request'),
-                      body: jsonEncode({'request_id': requestModel.id}),
-                      headers: {
-                        'session_token': id ?? '',
-                        'content-type': 'application/json'
-                      });
-                },
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              CircularButton(
-                icon: Icon(Icons.add_reaction),
-                onTap: () async {
-                  FlutterSecureStorage secureStorage = FlutterSecureStorage();
-                  final id = await secureStorage.read(key: 'sessionId');
-                  final response = await post(
-                      Uri.parse(
-                          'https://event-management-backend.up.railway.app/api/request/accept-request'),
-                      body: jsonEncode({'request_id': requestModel.id}),
-                      headers: {
-                        'session_token': id ?? '',
-                        'content-type': 'application/json'
-                      });
-                  if (response.statusCode == 200) {
-                    print(response.body);
-                    print('suckkkksus');
-                  } else {
-                    print('errrrrrrrrrrrrrrrorrrrrrrrrrrrrr');
-                    print(response.body);
-                  }
-                },
-              ),
-            ],
-          )
+          (widget.requestModel.status == "waiting")
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularButton(
+                      icon: const Icon(Icons.close),
+                      onTap: () async {
+                        FlutterSecureStorage secureStorage =
+                            FlutterSecureStorage();
+                        final id = await secureStorage.read(key: 'sessionId');
+                        final response = await post(
+                            Uri.parse(
+                                'https://event-management-backend.up.railway.app/api/request/reject-request'),
+                            body: jsonEncode({'request_id': widget.requestModel.id}),
+                            headers: {
+                              'session_token': id ?? '',
+                              'content-type': 'application/json'
+                            });
+                        if (response.statusCode == 200) {
+                          print(response.body);
+                          setState(() {
+                            widget.requestModel.status = "rejected";
+                          });
+                        } else {
+                          print("there is error");
+                          print(response.body);
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    CircularButton(
+                      icon: Icon(Icons.add_reaction),
+                      onTap: () async {
+                        FlutterSecureStorage secureStorage =
+                            FlutterSecureStorage();
+                        final id = await secureStorage.read(key: 'sessionId');
+                        final response = await post(
+                            Uri.parse(
+                                'https://event-management-backend.up.railway.app/api/request/accept-request'),
+                            body: jsonEncode({'request_id': widget.requestModel.id}),
+                            headers: {
+                              'session_token': id ?? '',
+                              'content-type': 'application/json'
+                            });
+                        if (response.statusCode == 200) {
+                          print(response.body);
+                          print('suckkkksus');
+                          setState(() {
+                            widget.requestModel.status = "approved";
+                          });
+                        } else {
+                          print('errrrrrrrrrrrrrrrorrrrrrrrrrrrrr');
+                          print(response.body);
+                        }
+                      },
+                    ),
+                  ],
+                )
+              : Text(widget.requestModel.status)
         ],
       ),
     );
