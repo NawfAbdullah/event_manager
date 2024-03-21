@@ -37,6 +37,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   bool isLoggedIn = false;
   FlutterSecureStorage _storage = FlutterSecureStorage();
+  String role = '';
   @override
   void initState() {
     // TODO: implement initState
@@ -46,13 +47,16 @@ class _MainScreenState extends State<MainScreen> {
 
   void isUserLoggedIn() async {
     bool isLogged = await _storage.read(key: 'sessionId') != null;
+
+    final x = await _storage.read(key: 'role');
     setState(() {
+      role = x ?? '';
       isLoggedIn = isLogged;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return isLoggedIn ? EventScreen() : loginScreen();
+    return isLoggedIn ? EventScreen(role: role) : loginScreen();
   }
 }

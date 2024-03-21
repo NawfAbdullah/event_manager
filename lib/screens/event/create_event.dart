@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:event_manager/components/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
+import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -20,80 +21,107 @@ class _CreateEventState extends State<CreateEvent> {
   String start = '';
   String end = '';
   FlutterSecureStorage storage = FlutterSecureStorage();
+  bool isLoading = false;
+  String error = '';
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 10,
-        ),
-        TextField(
-          onChanged: (value) => setState(() {
-            name = value;
-          }),
-          decoration:
-              kInputdecoration.copyWith(labelText: 'Event Name', hintText: ''),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextField(
-          onChanged: (value) => setState(() {
-            department = value;
-          }),
-          decoration:
-              kInputdecoration.copyWith(labelText: 'Department', hintText: ''),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        TextField(
-          controller: _controller,
-          decoration: kInputdecoration.copyWith(
-            prefixIcon: Icon(Icons.calendar_month_rounded),
-            labelText: 'Select date',
-            hintText: '',
-          ),
-          onTap: _selectDate,
-          readOnly: true,
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        SubmitButton(
-          onTap: () async {
-            final id = await storage.read(key: "sessionId");
-            final response = await post(
-                Uri.parse(
-                  "https://event-management-backend.up.railway.app/api/event/create",
-                ),
-                body: jsonEncode({
-                  "name": name,
-                  "date_from": start,
-                  "date_to": end,
-                  "department": department
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              error != null
+                  ? Text(
+                      error,
+                      style: const TextStyle(color: Colors.redAccent),
+                      textAlign: TextAlign.center,
+                    )
+                  : const SizedBox(
+                      height: 5,
+                    ),
+              const SizedBox(
+                height: 5,
+              ),
+              TextField(
+                onChanged: (value) => setState(() {
+                  name = value;
                 }),
-                headers: {
-                  "Content-Type": "application/json",
-                  "session_token": id ?? ''
-                });
-            if (response.statusCode == 200) {
-              print(response.body);
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) =>
-              //         Event(EventId: '1234', EventName: 'Becrez')));
-            } else {
-              print(response.body);
-              throw Exception('Something went wrong');
-            }
-          },
-          innerText: "Add",
-        ),
-      ],
-    );
+                decoration: kInputdecoration.copyWith(
+                    labelText: 'Event Name', hintText: ''),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                onChanged: (value) => setState(() {
+                  department = value;
+                }),
+                decoration: kInputdecoration.copyWith(
+                    labelText: 'Department', hintText: ''),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              TextField(
+                controller: _controller,
+                decoration: kInputdecoration.copyWith(
+                  prefixIcon: const Icon(Icons.calendar_month_rounded),
+                  labelText: 'Select date',
+                  hintText: '',
+                ),
+                onTap: _selectDate,
+                readOnly: true,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              SubmitButton(
+                onTap: () async {
+                  setState(() {
+                    isLoading = false;
+                  });
+                  final id = await storage.read(key: "sessionId");
+                  final response = await post(
+                      Uri.parse(
+                        "https://event-management-backend.up.railway.app/api/event/create",
+                      ),
+                      body: jsonEncode({
+                        "name": name,
+                        "date_from": start,
+                        "date_to": end,
+                        "department": department
+                      }),
+                      headers: {
+                        "Content-Type": "application/json",
+                        "session_token": id ?? ''
+                      });
+                  if (response.statusCode == 200) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                    print(response.body);
+                    final parsed = jsonDecode(response.body);
+                    EventModel x = EventModel.fromJson(parsed);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => Event(eventModel: x)));
+                  } else {
+                    print(response.body);
+                    setState(() {
+                      isLoading = false;
+                      error = jsonDecode(response.body)['err_msg'];
+                    });
+                    throw Exception('Something went wrong');
+                  }
+                },
+                innerText: "Add",
+              ),
+            ],
+          );
   }
 
   Future<void> _selectDate() async {

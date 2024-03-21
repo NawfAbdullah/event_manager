@@ -61,9 +61,13 @@ class _ResultScreenState extends State<ResultScreen> {
                         decoration: const BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                  offset: Offset(5, 5), color: Colors.black)
+                                offset: Offset(5, 5),
+                                color: Colors.grey,
+                                blurRadius: 10,
+                                spreadRadius: 5,
+                              )
                             ],
-                            borderRadius: BorderRadius.all(Radius.circular(2)),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
                             color: Colors.white),
                         child: Column(
                           children: [

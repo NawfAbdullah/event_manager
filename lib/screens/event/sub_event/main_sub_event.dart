@@ -1,6 +1,7 @@
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/billing/bills.dart';
 import 'package:event_manager/screens/billing/upload_bills.dart';
+import 'package:event_manager/screens/participants/participants.dart';
 import 'package:flutter/material.dart';
 
 class SubEventScaffold extends StatefulWidget {
@@ -18,15 +19,18 @@ class _SubEventScaffoldState extends State<SubEventScaffold> {
   List screens = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     screens = [
-      Placeholder(),
+      ParticipantsList(
+          eventId: widget.eventModel.id, subEventId: widget.subEvent.id),
+      Bills(
+        subEvent: widget.subEvent,
+        event: widget.eventModel,
+      ),
       UploadBills(
         subEventModel: widget.subEvent,
         eventModel: widget.eventModel,
-      ),
-      Bills(subEvent: widget.subEvent)
+      )
     ];
   }
 
@@ -48,7 +52,9 @@ class _SubEventScaffoldState extends State<SubEventScaffold> {
                 icon: Icon(Icons.volunteer_activism), label: 'participants'),
             BottomNavigationBarItem(icon: Icon(Icons.note), label: 'bills'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.details), label: 'details'),
+              icon: Icon(Icons.details),
+              label: 'upload bills',
+            ),
           ]),
     );
   }

@@ -2,7 +2,7 @@ import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/list_of_members.dart';
 import 'package:event_manager/screens/event/requests_list.dart';
 import 'package:event_manager/screens/event/subevent.dart';
-import 'package:event_manager/screens/requests/list_of_requests.dart';
+import 'package:event_manager/screens/list_of_users.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -39,7 +39,7 @@ class _EventState extends State<Event> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             default:
               if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
@@ -59,8 +59,14 @@ class _EventState extends State<Event> {
       Container(
         child: id == widget.eventModel.studentId
             ? RequestList(eventId: widget.eventModel.id)
-            : Text('Access Restricted'),
-      )
+            : const Text('Access Restricted'),
+      ),
+      UsersList(
+        eventId: widget.eventModel.id,
+        subEventId: widget.eventModel.subevents.length > 0
+            ? widget.eventModel.subevents[0].id
+            : '',
+      ),
     ];
   }
 
@@ -72,28 +78,39 @@ class _EventState extends State<Event> {
       body: screens[curr_index],
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: curr_index,
-          selectedItemColor: Color.fromARGB(255, 121, 94, 217),
+          selectedItemColor: const Color.fromARGB(255, 121, 94, 217),
           unselectedItemColor: Colors.grey,
           onTap: (value) {
             setState(() {
               curr_index = value;
             });
           },
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.event), label: 'Sub Events'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.supervised_user_circle_sharp),
-                label: 'organizers'),
-            id == widget.eventModel.studentId
-                ? BottomNavigationBarItem(
+          items: id == widget.eventModel.studentId
+              ? [
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.event), label: 'Sub Events'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.supervised_user_circle_sharp),
+                      label: 'organizers'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.request_page_rounded,
+                      ),
+                      label: 'Requests'),
+                  const BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.request_page_rounded,
+                      Icons.inventory_outlined,
                     ),
-                    label: 'Requests')
-                : BottomNavigationBarItem(
-                    icon: Icon(Icons.lock), label: 'Locked')
-          ]),
+                    label: 'Invite',
+                  ),
+                ]
+              : [
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.event), label: 'Sub Events'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.supervised_user_circle_sharp),
+                      label: 'organizers'),
+                ]),
     );
   }
 }

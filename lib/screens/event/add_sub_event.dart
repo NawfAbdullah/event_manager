@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:event_manager/components/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
@@ -48,8 +47,10 @@ class _AddSubEventState extends State<AddSubEvent> {
                     Uri.parse(
                       'https://event-management-backend.up.railway.app/api/sub-event/create',
                     ),
-                    body: jsonEncode(
-                        {'name': subEventName, 'event_id': widget.event.id}),
+                    body: jsonEncode({
+                      'name': subEventName,
+                      'event_id': widget.event.id,
+                    }),
                     headers: {
                       'content-type': 'application/json',
                       'session_token': id ?? ''

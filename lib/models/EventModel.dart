@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:event_manager/models/UserModel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
@@ -8,6 +9,7 @@ class EventModel {
   final DateTime start;
   final DateTime end;
   final String department;
+  User? treasurer;
   String studentId = '';
   List volunteer = [];
   List<SubEventModel> subevents = [];
@@ -79,15 +81,19 @@ Future<EventModel> fetchEvent(EventModel event) async {
   if (response.statusCode == 200) {
     final parsed = jsonDecode(response.body);
     event.subevents = [];
+
     for (var i = 0; i < parsed["sub_events"].length; i++) {
       try {
         SubEventModel x = SubEventModel.fromJson(parsed['sub_events'][i]);
+
         event.AddSubEvent(x);
       } catch (e) {
         print('it is the error');
         print(e);
       }
     }
+    event.treasurer =
+        parsed["treasurer"] != null ? User.fromJSON(parsed["treasurer"]) : null;
     event.studentId = parsed["student_coordinator"]?["_id"] ?? '';
     event.coordinatorName = parsed["student_coordinator"]?["name"] ?? '';
     print(parsed);
@@ -151,7 +157,7 @@ class SubEventModel {
   SubEventModel.fromJson(Map<String, dynamic> json)
       : name = json['name'],
         id = json['_id'],
-        eventManager = '';
+        eventManager = json["event_manager"]?["name"] ?? '';
 }
 
 List<String> parseStringToList(String input) {

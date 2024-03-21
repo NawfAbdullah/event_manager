@@ -91,8 +91,10 @@ class _loginScreenState extends State<loginScreen> {
                   value: body['session_token'],
                 );
                 User user = await getUser();
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => EventScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EventScreen(
+                          role: user.role,
+                        )));
               } else {
                 setState(() {
                   error = body["err_msg"];

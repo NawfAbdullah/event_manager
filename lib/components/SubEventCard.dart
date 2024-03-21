@@ -42,9 +42,9 @@ class SubEventCard extends StatelessWidget {
             )
           ],
         ),
-        height: 100,
+        height: 80,
         width: MediaQuery.sizeOf(context).width - 15,
-        margin: EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,19 +52,19 @@ class SubEventCard extends StatelessWidget {
             Container(
               width: 5,
               height: 95,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 121, 94, 217),
                   borderRadius: BorderRadius.all(Radius.circular(5))),
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
             ),
             Container(
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     subEvent.name,
-                    style: TextStyle(fontSize: 30),
+                    style: const TextStyle(fontSize: 30),
                   ),
                 ],
               ),

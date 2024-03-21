@@ -7,8 +7,8 @@ import 'package:event_manager/screens/scanner/scanner.dart';
 import 'package:flutter/material.dart';
 
 class EventScreen extends StatefulWidget {
-  const EventScreen({super.key});
-
+  EventScreen({super.key, required this.role});
+  String role;
   @override
   State<EventScreen> createState() => _EventScreenState();
 }
@@ -16,13 +16,30 @@ class EventScreen extends StatefulWidget {
 class _EventScreenState extends State<EventScreen> {
   @override
   int current_index = 0;
-  List<Widget> screens = [
-    MyEvents(),
-    Scanner(),
-    CreateEvent(),
-    MainEvent(),
-    Profile(),
-  ];
+
+  late List<Widget> screens;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      screens = widget.role == 'studentcoordinator'
+          ? [
+              MyEvents(),
+              Scanner(),
+              CreateEvent(),
+              MainEvent(),
+              Profile(),
+            ]
+          : [
+              MyEvents(),
+              Scanner(),
+              MainEvent(),
+              Profile(),
+            ];
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Events')),
@@ -36,15 +53,29 @@ class _EventScreenState extends State<EventScreen> {
               current_index = value;
             });
           },
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.scanner), label: 'Scanner'),
-            BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Create'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month), label: 'Calendar'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          ]),
+          items: widget.role == 'studentcoordinator'
+              ? [
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.home), label: 'Home'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.scanner), label: 'Scanner'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.add), label: 'Create'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.calendar_month), label: 'Calendar'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.person), label: 'Profile'),
+                ]
+              : [
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.home), label: 'Home'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.scanner), label: 'Scanner'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.calendar_month), label: 'Calendar'),
+                  const BottomNavigationBarItem(
+                      icon: Icon(Icons.person), label: 'Profile'),
+                ]),
     );
   }
 }
@@ -78,7 +109,7 @@ class _MainEventState extends State<MainEvent> {
               if (snapshot.hasError) {
                 print(snapshot.error);
                 return const Center(
-                  child: Text('An error has occurred!'),
+                  child: Text('Something went wrong'),
                 );
               } else if (snapshot.hasData) {
                 print('xxxxxxxxxxvrsgrdfgrdf');
@@ -97,7 +128,7 @@ class _MainEventState extends State<MainEvent> {
                               ));
                     });
               } else {
-                return CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
               }
           }
         });

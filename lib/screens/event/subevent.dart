@@ -59,7 +59,9 @@ class _SubEventState extends State<SubEvent> {
                   );
                 },
                 innerText: 'Add Sub Event')
-            : SubmitButton(onTap: () {}, innerText: 'Request to be a volunteer')
+            : const SizedBox(
+                height: 5,
+              )
       ],
     );
   }

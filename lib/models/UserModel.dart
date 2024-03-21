@@ -17,10 +17,28 @@ class User {
         email = json['email'],
         role = json['type'],
         id = json['_id'],
-        myEvents = json["events_as_studentcoordinator"] +
-            json["events_as_eventmanager"] +
-            json["events_as_treasurer"] +
-            json["events_as_volunteer"];
+        myEvents = json["events_as_studentcoordinator"] ??
+            [] + json["events_as_eventmanager"] ??
+            [] + json["events_as_treasurer"] ??
+            [] + json["events_as_volunteer"] ??
+            [];
+  // myEvents = jsonDecode(json["events_as_studentcoordinator"]) as List;
+}
+
+class KuttyUser {
+  KuttyUser({name, email, department, id});
+  late String name;
+  late String email;
+  late String role;
+  late String sessionId;
+  late String id;
+  late List<dynamic> myEvents = [];
+
+  KuttyUser.fromJSON(Map<String, dynamic> json)
+      : name = json['name'] ?? '',
+        email = json['email'],
+        role = json['type'],
+        id = json['_id'];
   // myEvents = jsonDecode(json["events_as_studentcoordinator"]) as List;
 }
 
@@ -57,4 +75,28 @@ Future<User> getUser() async {
   } else {
     throw Exception(response.body);
   }
+}
+
+Future<List<KuttyUser>> getAllVolunteers() async {
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  final id = await storage.read(key: 'sessionId');
+  final response = await get(
+      Uri.parse(
+          "https://event-management-backend.up.railway.app/api/user/get-all-volunteers"),
+      headers: {
+        'session_token': id ?? '',
+      });
+  List<KuttyUser> users = [];
+  print(response.body);
+  if (response.statusCode == 200) {
+    final parsed = jsonDecode(response.body);
+    for (var i = 0; i < parsed.length; i++) {
+      KuttyUser x = KuttyUser.fromJSON(parsed[i]);
+      users.add(x);
+    }
+  } else {
+    print('I guess we got error');
+    print(response.body);
+  }
+  return users;
 }
