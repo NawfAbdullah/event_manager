@@ -18,93 +18,100 @@ class _loginScreenState extends State<loginScreen> {
   late String email;
   late String password;
   String? error = null;
+  bool isLoading = false;
   final storage = FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Cres Days',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 30,
-            ),
-          ),
-          error != null
-              ? Text(
-                  error ?? '',
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Cres Days',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.red,
+                    fontSize: 30,
                   ),
-                )
-              : SizedBox(
-                  height: 10,
                 ),
-          TextField(
-            onChanged: (value) {
-              setState(() {
-                email = value;
-              });
-            },
-            decoration: kInputdecoration.copyWith(hintText: 'username'),
-          ),
-          SizedBox(
-            height: 48,
-          ),
-          TextField(
-            obscureText: true,
-            onChanged: (value) {
-              setState(() {
-                password = value;
-              });
-            },
-            decoration: kInputdecoration.copyWith(hintText: 'Password'),
-          ),
-          const SizedBox(
-            height: 12.0,
-          ),
-          SubmitButton(
-            onTap: () async {
-              // factory Cookie(String name, String value)
-              print("$email:$password");
-              final response = await post(
-                Uri.parse(
-                    'https://event-management-backend.up.railway.app/api/auth/log-in'),
-                body: jsonEncode(
-                  {
-                    "email": email,
-                    "password": password,
+                error != null
+                    ? Text(
+                        error ?? '',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.red,
+                        ),
+                      )
+                    : const SizedBox(
+                        height: 10,
+                      ),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
                   },
+                  decoration: kInputdecoration.copyWith(hintText: 'username'),
                 ),
-                headers: {"Content-Type": "application/json"},
-              );
-              final body = jsonDecode(response.body);
-              if (response.statusCode == 200) {
-                await storage.write(
-                  key: 'sessionId',
-                  value: body['session_token'],
-                );
-                User user = await getUser();
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EventScreen(
-                          role: user.role,
-                        )));
-              } else {
-                setState(() {
-                  error = body["err_msg"];
-                });
-              }
-            },
-            innerText: "Log In",
-          )
-        ],
-      ),
+                const SizedBox(
+                  height: 48,
+                ),
+                TextField(
+                  obscureText: true,
+                  onChanged: (value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                  decoration: kInputdecoration.copyWith(hintText: 'Password'),
+                ),
+                const SizedBox(
+                  height: 12.0,
+                ),
+                SubmitButton(
+                  onTap: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    final response = await post(
+                      Uri.parse(
+                          'https://event-management-backend.up.railway.app/api/auth/log-in'),
+                      body: jsonEncode(
+                        {
+                          "email": email,
+                          "password": password,
+                        },
+                      ),
+                      headers: {"Content-Type": "application/json"},
+                    );
+                    final body = jsonDecode(response.body);
+                    if (response.statusCode == 200) {
+                      await storage.write(
+                        key: 'sessionId',
+                        value: body['session_token'],
+                      );
+                      User user = await getUser();
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EventScreen(
+                                role: user.role,
+                              )));
+                    } else {
+                      setState(() {
+                        isLoading = false;
+                        error = body["err_msg"];
+                      });
+                    }
+                  },
+                  innerText: "Log In",
+                )
+              ],
+            ),
     );
   }
 }

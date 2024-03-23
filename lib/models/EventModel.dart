@@ -121,13 +121,14 @@ Future<List<EventModel>> fetchMyEvents() async {
   if (parsedIds.length > 0) {
     for (var i = 0; i < parsedIds.length; i++) {
       print(parsedIds[i]);
+
       final response = await get(
           Uri.parse(
               'https://event-management-backend.up.railway.app/api/event/get-one?id=${parsedIds[i]}'),
           headers: {
             'session_token': session ?? '',
           });
-
+      print(parsedIds[i]);
       if (response.statusCode == 200) {
         final parsed = jsonDecode(response.body);
         EventModel myEvent = EventModel.fromJson(parsed);

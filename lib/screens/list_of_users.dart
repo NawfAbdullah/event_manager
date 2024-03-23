@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:event_manager/models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -40,53 +39,10 @@ class _UsersListState extends State<UsersList> {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(snapshot.data![index].name),
-                    subtitle: Text(snapshot.data![index].email),
-                    trailing: GestureDetector(
-                        onTap: () async {
-                          FlutterSecureStorage storage = FlutterSecureStorage();
-                          final id = await storage.read(key: 'sessionId');
-                          final response = await post(
-                              Uri.parse(
-                                  'https://event-management-backend.up.railway.app/api/invitation/create-invitation'),
-                              body: jsonEncode({
-                                "from_event": widget.eventId,
-                                "from_sub_event": widget.subEventId,
-                                "to_user": snapshot.data![index].id,
-                                "position": "treasurer"
-                              }),
-                              headers: {
-                                'Content-type': 'application/json',
-                                'session_token': id ?? ''
-                              });
-                          print(response.statusCode);
-                          print(response.body);
-                          if (response.statusCode == 200) {
-                            setState(() {
-                              text = 'Invited';
-                            });
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: const Border(
-                                  top: BorderSide(
-                                      color: Color.fromARGB(255, 134, 84, 241),
-                                      width: 3),
-                                  left: BorderSide(
-                                      color: Color.fromARGB(255, 134, 84, 241),
-                                      width: 3),
-                                  right: BorderSide(
-                                      color: Color.fromARGB(255, 134, 84, 241),
-                                      width: 3),
-                                  bottom: BorderSide(
-                                      color: Color.fromARGB(255, 134, 84, 241),
-                                      width: 3))),
-                          child: Text(text),
-                        )),
+                  return ListItem(
+                    eventId: widget.eventId,
+                    subEventId: widget.subEventId,
+                    curr_user: snapshot.data![index],
                   );
                 },
               );
@@ -97,6 +53,97 @@ class _UsersListState extends State<UsersList> {
             }
         }
       },
+    );
+  }
+}
+
+class ListItem extends StatefulWidget {
+  ListItem(
+      {super.key,
+      required this.eventId,
+      required this.subEventId,
+      required this.curr_user});
+  final String eventId;
+  final String subEventId;
+  final KuttyUser curr_user;
+  @override
+  State<ListItem> createState() => _ListItemState();
+}
+
+class _ListItemState extends State<ListItem> {
+  String text = 'Invite';
+  bool invited = false;
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(widget.curr_user.name),
+      subtitle: Text(widget.curr_user.email),
+      trailing: GestureDetector(
+          onTap: () async {
+            FlutterSecureStorage storage = FlutterSecureStorage();
+            final id = await storage.read(key: 'sessionId');
+            final response = await post(
+                Uri.parse(
+                  'https://event-management-backend.up.railway.app/api/invitation/create-invitation',
+                ),
+                body: jsonEncode({
+                  "from_event": widget.eventId,
+                  "from_sub_event": widget.subEventId,
+                  "to_user": widget.curr_user.id,
+                  "position": "treasurer"
+                }),
+                headers: {
+                  'Content-type': 'application/json',
+                  'session_token': id ?? ''
+                });
+            print(response.statusCode);
+            print(response.body);
+            if (response.statusCode == 200) {
+              setState(() {
+                text = 'Sent';
+                invited = true;
+              });
+            } else {
+              setState(() {
+                text = 'Invited';
+              });
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: invited
+                    ? Color.fromARGB(255, 67, 227, 131)
+                    : Color.fromARGB(255, 134, 84, 241),
+                border: Border(
+                    top: BorderSide(
+                        color: invited
+                            ? Color.fromARGB(255, 67, 227, 131)
+                            : Color.fromARGB(255, 134, 84, 241),
+                        width: 2),
+                    left: BorderSide(
+                        color: invited
+                            ? Color.fromARGB(255, 67, 227, 131)
+                            : Color.fromARGB(255, 134, 84, 241),
+                        width: 2),
+                    right: BorderSide(
+                        color: invited
+                            ? Color.fromARGB(255, 67, 227, 131)
+                            : Color.fromARGB(255, 134, 84, 241),
+                        width: 2),
+                    bottom: BorderSide(
+                        color: invited
+                            ? Color.fromARGB(255, 67, 227, 131)
+                            : Color.fromARGB(255, 134, 84, 241),
+                        width: 2))),
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          )),
     );
   }
 }

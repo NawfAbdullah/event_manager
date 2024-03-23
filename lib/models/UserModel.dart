@@ -17,12 +17,10 @@ class User {
         email = json['email'],
         role = json['type'],
         id = json['_id'],
-        myEvents = json["events_as_studentcoordinator"] ??
-            [] + json["events_as_eventmanager"] ??
-            [] + json["events_as_treasurer"] ??
-            [] + json["events_as_volunteer"] ??
-            [];
-  // myEvents = jsonDecode(json["events_as_studentcoordinator"]) as List;
+        myEvents = (json["events_as_studentcoordinator"] ?? []) +
+            (json["events_as_eventmanager"] ?? []) +
+            (json["events_as_treasurer"] ?? []) +
+            (json["events_as_volunteer"] ?? []);
 }
 
 class KuttyUser {

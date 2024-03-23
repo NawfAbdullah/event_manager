@@ -2,7 +2,6 @@ import 'package:event_manager/components/EventCard.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/create_event.dart';
 import 'package:event_manager/screens/profile.dart';
-import 'package:event_manager/screens/scanner/results.dart';
 import 'package:event_manager/screens/scanner/scanner.dart';
 import 'package:flutter/material.dart';
 
@@ -156,7 +155,7 @@ class _MyEventsState extends State<MyEvents> {
               if (snapshot.hasError) {
                 print(snapshot.error);
                 return const Center(
-                  child: Text('An error has occurred!'),
+                  child: Text('No events'),
                 );
               } else if (snapshot.hasData) {
                 print('xxxxxxxxxxvrsgrdfgrdf');
@@ -165,14 +164,15 @@ class _MyEventsState extends State<MyEvents> {
                     itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
                       return EventCard(
-                          eventModel: snapshot.data?[index] ??
-                              EventModel(
-                                id: '',
-                                name: '',
-                                start: DateTime.now(),
-                                end: DateTime.now(),
-                                department: '',
-                              ));
+                        eventModel: snapshot.data?[index] ??
+                            EventModel(
+                              id: '',
+                              name: '',
+                              start: DateTime.now(),
+                              end: DateTime.now(),
+                              department: '',
+                            ),
+                      );
                     });
               } else {
                 return CircularProgressIndicator();

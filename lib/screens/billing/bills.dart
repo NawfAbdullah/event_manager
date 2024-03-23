@@ -17,6 +17,8 @@ class _BillsState extends State<Bills> {
   @override
   void initState() {
     // TODO: implement initState
+    print('Here is heeeeeeeeeeeeeeeeeeeeeeeeeee');
+    print(widget.event.treasurer);
     bills = getAllBills(widget.event.id, widget.subEvent.id);
     super.initState();
   }
@@ -28,7 +30,7 @@ class _BillsState extends State<Bills> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           default:
             if (snapshot.hasError) {
               print(snapshot.error);
@@ -37,7 +39,12 @@ class _BillsState extends State<Bills> {
               return ListView.builder(
                 itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) {
-                  return BillCard(bill: snapshot.data![index]);
+                  return BillCard(
+                    eventId: widget.event.id,
+                    subEventId: widget.subEvent.id,
+                    bill: snapshot.data![index],
+                    treasurer: widget.event.treasurer,
+                  );
                 },
               );
             } else {

@@ -30,7 +30,6 @@ class _EventState extends State<Event> {
 
   @override
   void initState() {
-    super.initState();
     setId();
     fullEvent = fetchEvent(widget.eventModel);
     screens = [
@@ -42,6 +41,7 @@ class _EventState extends State<Event> {
               return const Center(child: CircularProgressIndicator());
             default:
               if (snapshot.hasError) {
+                print(fullEvent);
                 return Text(snapshot.error.toString());
               } else if (snapshot.hasData) {
                 return SubEvent(
@@ -68,6 +68,7 @@ class _EventState extends State<Event> {
             : '',
       ),
     ];
+    super.initState();
   }
 
   Widget build(BuildContext context) {

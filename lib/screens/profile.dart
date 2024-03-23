@@ -1,5 +1,7 @@
+import 'package:event_manager/components/InvitationCard.dart';
 import 'package:event_manager/components/RequestCard.dart';
 import 'package:event_manager/components/SubmitButton.dart';
+import 'package:event_manager/models/InvitationModel.dart';
 import 'package:event_manager/models/RequestModel.dart';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/changepassword.dart';
@@ -10,7 +12,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class Profile extends StatelessWidget {
   Profile({super.key});
   Future<User> user = getUser();
-  Future<List<RequestModel>> request = getMyRequests();
+  Future<List<InvitationModel>> request = getAllInvitation();
   @override
   Widget build(BuildContext context) {
     FlutterSecureStorage storage = FlutterSecureStorage();
@@ -52,37 +54,31 @@ class Profile extends StatelessWidget {
                   }
               }
             }),
-        Text(
-          'My Requests',
+        const Text(
+          'Invitations',
           style: TextStyle(fontSize: 25),
         ),
         Container(
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.55,
           child: FutureBuilder(
             future: request,
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 default:
                   if (snapshot.hasError) {
                     return throw Exception(snapshot.error.toString());
                   } else if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data?.length,
-                      itemBuilder: (context, index) {
-                        return RequestCard(
-                            requestModel: snapshot.data?[index] ??
-                                RequestModel(
-                                    id: '',
-                                    requestedBy: '',
-                                    forEvent: '',
-                                    toSubEvent: '',
-                                    position: '',
-                                    status: '',
-                                    requestedOn: DateTime.now()));
-                      },
-                    );
+                    return (snapshot.data!.isNotEmpty)
+                        ? ListView.builder(
+                            itemCount: snapshot.data?.length,
+                            itemBuilder: (context, index) {
+                              return InvitationCard(
+                                  invitationModel: snapshot.data![index]);
+                            },
+                          )
+                        : Text('No Invitations');
                   } else {
                     return CircularProgressIndicator();
                   }
