@@ -88,6 +88,31 @@ class _InvitationCardState extends State<InvitationCard> {
             width: 10,
           ),
           GestureDetector(
+            onTap: () async {
+              FlutterSecureStorage storage = FlutterSecureStorage();
+              final id = await storage.read(key: 'sessionId');
+              final response = await post(
+                  Uri.parse(
+                    'https://event-management-backend.up.railway.app/api/invitation/reject-invitation',
+                  ),
+                  body:
+                      jsonEncode({"invitation_id": widget.invitationModel.id}),
+                  headers: {
+                    'content-type': 'application/json',
+                    'session_token': id ?? '',
+                  });
+              if (response.statusCode == 200) {
+                setState(() {
+                  isDone = true;
+                  backColor = Colors.greenAccent;
+                });
+              } else {
+                print(response.body);
+                setState(() {
+                  backColor = Colors.redAccent;
+                });
+              }
+            },
             child: Container(
               child: Text('Reject'),
             ),

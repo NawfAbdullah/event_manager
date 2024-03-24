@@ -5,6 +5,7 @@ import 'package:event_manager/screens/event/subevent.dart';
 import 'package:event_manager/screens/list_of_users.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Event extends StatefulWidget {
   const Event({super.key, required this.eventModel});
@@ -59,7 +60,23 @@ class _EventState extends State<Event> {
       Container(
         child: id == widget.eventModel.studentId
             ? RequestList(eventId: widget.eventModel.id)
-            : const Text('Access Restricted'),
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/requests.svg',
+                    width: 300,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Access Restricted',
+                    style: TextStyle(fontSize: 25),
+                  )
+                ],
+              ),
       ),
       UsersList(
         eventId: widget.eventModel.id,

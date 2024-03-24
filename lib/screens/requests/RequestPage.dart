@@ -20,7 +20,7 @@ class RequestPage extends StatefulWidget {
 }
 
 class _RequestPageState extends State<RequestPage> {
-  String position = '';
+  String position = 'Role';
   String err = '';
 
   @override
@@ -50,22 +50,31 @@ class _RequestPageState extends State<RequestPage> {
           const SizedBox(
             height: 20,
           ),
-          DropdownButton(
-              items: const [
-                DropdownMenuItem(
-                  value: 'volunteer',
-                  child: Text('volunteer'),
-                ),
-                DropdownMenuItem(
-                  value: 'eventmanager',
-                  child: Text('event manger'),
-                )
-              ],
-              onChanged: (value) {
-                setState(() {
-                  position = value ?? '';
-                });
-              }),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text('Select Role'),
+              DropdownButton(
+                  hint: Text(position),
+                  style: TextStyle(color: Colors.black),
+                  icon: Icon(Icons.lock_person),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'volunteer',
+                      child: Text('volunteer'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'eventmanager',
+                      child: Text('event manger'),
+                    )
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      position = value ?? '';
+                    });
+                  }),
+            ],
+          ),
           SizedBox(
             height: 20,
           ),
@@ -88,7 +97,25 @@ class _RequestPageState extends State<RequestPage> {
                 if (response.statusCode == 200) {
                   print(response.body);
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Text("Request is sent"),
+                    builder: (context) => Scaffold(
+                      body: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/images/success.svg',
+                            width: 300,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Request sent successfully',
+                            style: TextStyle(fontSize: 20),
+                          )
+                        ],
+                      ),
+                    ),
                   ));
                 } else {
                   err = jsonDecode(response.body)["err_msg"];

@@ -2,7 +2,7 @@ import 'package:event_manager/models/ParticipantModel.dart';
 import 'package:flutter/material.dart';
 
 class ParticipantsList extends StatelessWidget {
-  ParticipantsList({
+  const ParticipantsList({
     super.key,
     required this.eventId,
     required this.subEventId,
@@ -18,7 +18,7 @@ class ParticipantsList extends StatelessWidget {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             default:
@@ -64,7 +64,7 @@ class ParticipantsList extends StatelessWidget {
                           ],
                         ));
               } else {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
