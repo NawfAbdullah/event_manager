@@ -1,6 +1,7 @@
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/billing/bills.dart';
 import 'package:event_manager/screens/billing/upload_bills.dart';
+import 'package:event_manager/screens/participants/add_particpants.dart';
 import 'package:event_manager/screens/participants/participants.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +48,7 @@ class _SubEventScaffoldState extends State<SubEventScaffold> {
               cur_index = value;
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.volunteer_activism), label: 'participants'),
             BottomNavigationBarItem(icon: Icon(Icons.note), label: 'bills'),
@@ -56,6 +57,15 @@ class _SubEventScaffoldState extends State<SubEventScaffold> {
               label: 'upload bills',
             ),
           ]),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddParticpantScreen(
+                  eventId: widget.eventModel.id,
+                  subEventId: widget.subEvent.id)));
+        },
+      ),
     );
   }
 }

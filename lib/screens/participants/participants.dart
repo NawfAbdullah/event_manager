@@ -27,7 +27,42 @@ class ParticipantsList extends StatelessWidget {
                   child: Text(snapshot.error.toString()),
                 );
               } else if (snapshot.hasData) {
-                return Text(snapshot.data.toString());
+                return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) => Column(
+                          children: [
+                            ListTile(
+                              contentPadding: EdgeInsets.all(10),
+                              tileColor: snapshot.data![index].isVerified
+                                  ? Colors.greenAccent
+                                  : Colors.white,
+                              title: Text(
+                                snapshot.data![index].name,
+                                style: TextStyle(fontSize: 23),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data![index].email,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  Text(
+                                    snapshot.data![index].contactNo,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  Text(
+                                    snapshot.data![index].college,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ));
               } else {
                 return Center(
                   child: CircularProgressIndicator(),

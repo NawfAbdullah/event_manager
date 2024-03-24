@@ -8,6 +8,7 @@ class Participant {
   late String college;
   late String contactNo;
   late String eventName;
+  late bool isVerified;
 
   Participant({
     required name,
@@ -21,8 +22,11 @@ class Participant {
       : name = json['name'],
         college = json['college'],
         contactNo = json['contact_no'],
-        eventName = json['event_details']['event_name'],
-        email = json['email'];
+        eventName = json['event_details'] != null
+            ? json['event_details']['event_name']
+            : '',
+        email = json['email'],
+        isVerified = json['is_verified'];
 }
 
 Future<List<Participant>> getAllParticipant(
@@ -41,6 +45,7 @@ Future<List<Participant>> getAllParticipant(
   if (response.statusCode == 200) {
     final parsed = jsonDecode(response.body);
     for (var i in parsed["participants"]) {
+      print(i);
       var x = Participant.fromJSON(i);
       participants.add(x);
     }

@@ -17,8 +17,6 @@ class _BillsState extends State<Bills> {
   @override
   void initState() {
     // TODO: implement initState
-    print('Here is heeeeeeeeeeeeeeeeeeeeeeeeeee');
-    print(widget.event.treasurer);
     bills = getAllBills(widget.event.id, widget.subEvent.id);
     super.initState();
   }
@@ -48,7 +46,7 @@ class _BillsState extends State<Bills> {
                 },
               );
             } else {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
         }
       },
