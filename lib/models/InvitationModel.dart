@@ -16,7 +16,7 @@ class InvitationModel {
   final String eventName;
   final String eventId;
   final String postion;
-  final String status;
+  String status;
   final DateTime onDate;
 
   InvitationModel.fromJson(Map<String, dynamic> json)

@@ -4,7 +4,9 @@ import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/event/events.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart';
 
 class loginScreen extends StatefulWidget {
@@ -21,10 +23,9 @@ class _loginScreenState extends State<loginScreen> {
   bool isLoading = false;
   final storage = FlutterSecureStorage();
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 231, 223, 255),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -34,11 +35,26 @@ class _loginScreenState extends State<loginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  'Cres Days',
-                  textAlign: TextAlign.center,
+                  'Hey,',
+                  textAlign: TextAlign.left,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 40,
+                    color: Color.fromARGB(255, 150, 127, 255),
+                    fontWeight: FontWeight.w900,
                   ),
+                ),
+                const Text(
+                  'there!',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Color.fromARGB(255, 135, 135, 135),
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                SvgPicture.asset(
+                  'assets/images/sunlight.svg',
+                  width: MediaQuery.of(context).size.width * 0.4,
                 ),
                 error != null
                     ? Text(
@@ -51,25 +67,32 @@ class _loginScreenState extends State<loginScreen> {
                     : const SizedBox(
                         height: 10,
                       ),
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      email = value;
-                    });
-                  },
-                  decoration: kInputdecoration.copyWith(hintText: 'username'),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        email = value;
+                      });
+                    },
+                    decoration: kInputdecoration.copyWith(
+                        hintText: '', labelText: 'username'),
+                  ),
                 ),
                 const SizedBox(
-                  height: 48,
+                  height: 20,
                 ),
-                TextField(
-                  obscureText: true,
-                  onChanged: (value) {
-                    setState(() {
-                      password = value;
-                    });
-                  },
-                  decoration: kInputdecoration.copyWith(hintText: 'Password'),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  child: TextField(
+                    obscureText: true,
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                    decoration: kInputdecoration.copyWith(hintText: 'Password'),
+                  ),
                 ),
                 const SizedBox(
                   height: 12.0,

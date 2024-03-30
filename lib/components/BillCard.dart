@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:event_manager/models/BillModel.dart';
 import 'package:event_manager/models/UserModel.dart';
+import 'package:event_manager/screens/participants/participants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
@@ -54,19 +55,30 @@ class _BillCardState extends State<BillCard> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.bill.name,
-                  style: const TextStyle(
-                      fontSize: 25, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.left,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.bill.name,
+                      style: const TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                    Tablet(
+                        color: widget.bill.status == 'accepted'
+                            ? Colors.green
+                            : Colors.redAccent,
+                        text: widget.bill.status,
+                        icon: Icons.verified)
+                  ],
                 ),
                 Text(
                   widget.bill.description,
                   textAlign: TextAlign.left,
+                  style: const TextStyle(fontSize: 20),
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 400,
                   child: Image.network(
                     widget.bill.img,
                     width: MediaQuery.of(context).size.width,

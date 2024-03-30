@@ -83,19 +83,26 @@ class _CreateEventState extends State<CreateEvent> {
               SubmitButton(
                 onTap: () async {
                   setState(() {
-                    isLoading = false;
+                    isLoading = true;
                   });
                   final id = await storage.read(key: "sessionId");
                   final response = await post(
                       Uri.parse(
                         "https://event-management-backend.up.railway.app/api/event/create",
                       ),
-                      body: jsonEncode({
-                        "name": name,
-                        "date_from": start,
-                        "date_to": end,
-                        "department": department
-                      }),
+                      body: jsonEncode(start == end
+                          ? {
+                              "name": name,
+                              "date_from": start,
+                              "department": department,
+                              "date_to": null
+                            }
+                          : {
+                              "name": name,
+                              "date_from": start,
+                              "date_to": end,
+                              "department": department
+                            }),
                       headers: {
                         "Content-Type": "application/json",
                         "session_token": id ?? ''

@@ -65,7 +65,7 @@ class _EventState extends State<Event> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    'assets/images/requests.svg',
+                    'assets/images/request.svg',
                     width: 300,
                   ),
                   const SizedBox(

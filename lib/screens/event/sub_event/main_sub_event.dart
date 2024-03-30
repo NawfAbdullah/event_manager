@@ -43,6 +43,7 @@ class _SubEventScaffoldState extends State<SubEventScaffold> {
       ),
       body: screens[cur_index],
       bottomNavigationBar: BottomNavigationBar(
+          currentIndex: cur_index,
           onTap: (value) {
             setState(() {
               cur_index = value;

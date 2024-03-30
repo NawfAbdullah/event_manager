@@ -29,7 +29,7 @@ class EventModel {
   EventModel.fromJson(Map<String, dynamic> json)
       : name = json['name'],
         start = DateTime.parse(json['date_from']),
-        end = DateTime.parse(json['date_to']),
+        end = DateTime.parse(json['date_to'] ?? json['date_from']),
         id = json['_id'],
         department = json['department'];
 }
@@ -106,39 +106,49 @@ Future<EventModel> fetchEvent(EventModel event) async {
 }
 
 Future<List<EventModel>> fetchMyEvents() async {
+  List<EventModel> currentEvent = [];
   const FlutterSecureStorage storage = FlutterSecureStorage();
   final session = await storage.read(key: 'sessionId');
-  final myEventStringIds = await storage.read(key: 'my_events');
-
+  // final myEventStringIds = await storage.read(key: 'my_events');
+  final id = await storage.read(key: 'sessionId');
+  final response = await post(
+      Uri.parse(
+          'https://event-management-backend.up.railway.app/api/auth/verify-session'),
+      body: jsonEncode({
+        'session_token': id,
+      }),
+      headers: {
+        'admin-access-code': '044453c2-e45a-4c5d-91b5-c3c14a483d61',
+        'Content-Type': 'application/json',
+      });
   List<String> parsedIds = [];
-  try {
-    parsedIds = parseStringToList(myEventStringIds ?? '[]');
-  } catch (err) {
-    print('here is the error');
-    print(err);
-  }
-  List<EventModel> currentEvent = [];
-  if (parsedIds.length > 0) {
-    for (var i = 0; i < parsedIds.length; i++) {
-      print(parsedIds[i]);
+  if (response.statusCode == 200) {
+    User user = User.fromJSON(jsonDecode(response.body));
+    await saveCurrentUser(user);
 
-      final response = await get(
-          Uri.parse(
-              'https://event-management-backend.up.railway.app/api/event/get-one?id=${parsedIds[i]}'),
-          headers: {
-            'session_token': session ?? '',
-          });
-      print(parsedIds[i]);
-      if (response.statusCode == 200) {
-        final parsed = jsonDecode(response.body);
-        EventModel myEvent = EventModel.fromJson(parsed);
-        currentEvent.add(myEvent);
-      } else {
-        print('here is another error');
-        print(response.body);
-        throw Exception(response.body);
+    if (user.myEvents.length > 0) {
+      for (var i = 0; i < user.myEvents.length; i++) {
+        final response = await get(
+            Uri.parse(
+                'https://event-management-backend.up.railway.app/api/event/get-one?id=${user.myEvents[i]}'),
+            headers: {
+              'session_token': session ?? '',
+            });
+        print(user.myEvents[i]);
+        if (response.statusCode == 200) {
+          final parsed = jsonDecode(response.body);
+          print(parsed);
+          EventModel myEvent = EventModel.fromJson(parsed);
+          currentEvent.add(myEvent);
+        } else {
+          print('here is another error');
+          print(response.body);
+          throw Exception(response.body);
+        }
       }
     }
+  } else {
+    throw Exception(response.body);
   }
 
   return currentEvent;

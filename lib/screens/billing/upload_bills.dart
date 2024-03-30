@@ -45,17 +45,33 @@ class _UploadBillsState extends State<UploadBills> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _imgFile != null
-                  ? Image.file(
-                      _imgFile!,
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: 200,
-                    )
-                  : Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.grey,
-                    ),
+              GestureDetector(
+                onTap: () => takeSnapshot(),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _imgFile != null
+                          ? Image.file(
+                              _imgFile!,
+                              width: MediaQuery.of(context).size.width * 0.6,
+                            )
+                          : Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              height: 200,
+                              color: Color.fromARGB(255, 166, 131, 248),
+                              child: const Center(
+                                  child: Text(
+                                'Upload',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              )),
+                            )
+                    ]),
+              ),
               TextField(
                 decoration: kInputdecoration.copyWith(
                     hintText: '', labelText: 'Bill description'),
@@ -64,30 +80,6 @@ class _UploadBillsState extends State<UploadBills> {
                     desc = value;
                   });
                 },
-              ),
-              GestureDetector(
-                onTap: () => takeSnapshot(),
-                child: Container(
-                  width: 150,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    color: Colors.blueAccent,
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.camera,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        'Take Picture',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
               ),
               SubmitButton(
                   onTap: () async {

@@ -18,7 +18,7 @@ class SubmitButton extends StatelessWidget {
         ),
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
-            color: Colors.lightBlueAccent,
+            color: Color.fromARGB(255, 150, 127, 255),
             borderRadius: BorderRadius.all(Radius.circular(32))),
       ),
     );

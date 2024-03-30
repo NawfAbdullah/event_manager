@@ -74,8 +74,10 @@ class Profile extends StatelessWidget {
                         ? ListView.builder(
                             itemCount: snapshot.data?.length,
                             itemBuilder: (context, index) {
-                              return InvitationCard(
-                                  invitationModel: snapshot.data![index]);
+                              if (snapshot.data![index].status == "waiting") {
+                                return InvitationCard(
+                                    invitationModel: snapshot.data![index]);
+                              }
                             },
                           )
                         : Text('No Invitations');
@@ -103,10 +105,13 @@ class Profile extends StatelessWidget {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => loginScreen()));
               },
-              child: Text(
+              child: const Text(
                 'logout',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  decoration: TextDecoration.underline,
+                  decorationColor: Colors.redAccent,
+                  fontSize: 18,
                   color: Colors.redAccent,
                 ),
               ),

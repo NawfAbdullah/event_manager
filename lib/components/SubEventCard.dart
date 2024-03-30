@@ -16,7 +16,10 @@ class SubEventCard extends StatelessWidget {
       onTap: () async {
         String? eventsString = await storage.read(key: 'my_events');
         List<String> myEvents = parseStringToList(eventsString ?? '[a,b]');
-        if (myEvents.contains(subEvent.id) || myEvents.contains(event.id)) {
+        final role = await storage.read(key: 'role');
+        if (myEvents.contains(subEvent.id) ||
+            myEvents.contains(event.id) ||
+            role == 'hod') {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => SubEventScaffold(
                     subEvent: subEvent,

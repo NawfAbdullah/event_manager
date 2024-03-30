@@ -20,7 +20,8 @@ class User {
         myEvents = (json["events_as_studentcoordinator"] ?? []) +
             (json["events_as_eventmanager"] ?? []) +
             (json["events_as_treasurer"] ?? []) +
-            (json["events_as_volunteer"] ?? []);
+            (json["events_as_volunteer"] ?? []) +
+            (json['events_as_hod'] ?? []);
 }
 
 class KuttyUser {
