@@ -1,4 +1,4 @@
-import 'package:event_manager/components/RequestCard.dart';
+import 'package:event_manager/components/cards/RequestCard.dart';
 import 'package:event_manager/models/RequestModel.dart';
 import 'package:flutter/material.dart';
 

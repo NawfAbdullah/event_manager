@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:event_manager/components/SubmitButton.dart';
+import 'package:event_manager/components/buttons/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

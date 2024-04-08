@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:event_manager/components/SubmitButton.dart';
+import 'package:event_manager/components/buttons/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/event/events.dart';
@@ -25,7 +25,7 @@ class _loginScreenState extends State<loginScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 231, 223, 255),
+      backgroundColor: Color(0xffF3FCE9),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -34,24 +34,28 @@ class _loginScreenState extends State<loginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'Hey,',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Color.fromARGB(255, 150, 127, 255),
-                    fontWeight: FontWeight.w900,
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: const Text(
+                    'Login',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: AutofillHints.countryName,
+                      fontSize: 40,
+                      color: Color(0xff92a95f),
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
-                const Text(
-                  'there!',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Color.fromARGB(255, 135, 135, 135),
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+                // const Text(
+                //   'there!',
+                //   textAlign: TextAlign.left,
+                //   style: TextStyle(
+                //     fontSize: 40,
+                //     color: Color.fromARGB(255, 135, 135, 135),
+                //     fontWeight: FontWeight.w900,
+                //   ),
+                // ),
                 SvgPicture.asset(
                   'assets/images/sunlight.svg',
                   width: MediaQuery.of(context).size.width * 0.4,
@@ -91,7 +95,8 @@ class _loginScreenState extends State<loginScreen> {
                         password = value;
                       });
                     },
-                    decoration: kInputdecoration.copyWith(hintText: 'Password'),
+                    decoration: kInputdecoration.copyWith(
+                        hintText: '', labelText: 'Password'),
                   ),
                 ),
                 const SizedBox(

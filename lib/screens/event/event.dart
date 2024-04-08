@@ -1,3 +1,4 @@
+import 'package:event_manager/components/cards/TheCard.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/list_of_members.dart';
 import 'package:event_manager/screens/event/requests_list.dart';
@@ -34,28 +35,8 @@ class _EventState extends State<Event> {
     setId();
     fullEvent = fetchEvent(widget.eventModel);
     screens = [
-      FutureBuilder(
-        future: fullEvent,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(child: CircularProgressIndicator());
-            default:
-              if (snapshot.hasError) {
-                print(fullEvent);
-                return Text(snapshot.error.toString());
-              } else if (snapshot.hasData) {
-                return SubEvent(
-                  subEvents: widget.eventModel.subevents,
-                  event: widget.eventModel,
-                );
-              } else {
-                return const CircularProgressIndicator();
-              }
-          }
-        },
-      ),
       // ,
+      MainEventScreen(fullEvent: fullEvent, eventModel: widget.eventModel),
       ListOfMembers(event: widget.eventModel),
       Container(
         child: id == widget.eventModel.studentId
@@ -90,9 +71,9 @@ class _EventState extends State<Event> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.eventModel.name),
-      ),
+      // appBar: AppBar(
+      //   title: Text(widget.eventModel.name),
+      // ),
       body: screens[curr_index],
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: curr_index,
@@ -132,3 +113,75 @@ class _EventState extends State<Event> {
     );
   }
 }
+
+class MainEventScreen extends StatelessWidget {
+  MainEventScreen(
+      {super.key, required this.fullEvent, required this.eventModel});
+  Future<EventModel> fullEvent;
+  EventModel eventModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: 0,
+          child: Image.asset(
+            'assets/images/nature.jpg',
+            height: MediaQuery.of(context).size.height * 0.4,
+          ),
+        ),
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.3,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                color: Colors.white),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TheCard(
+                  eventModel.name,
+                  icon: Icons.calendar_month,
+                  subText: '19th may',
+                ),
+                FutureBuilder(
+                  future: fullEvent,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Center(child: CircularProgressIndicator());
+                      default:
+                        if (snapshot.hasError) {
+                          print(fullEvent);
+                          return Text(snapshot.error.toString());
+                        } else if (snapshot.hasData) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            child: SubEvent(
+                              subEvents: eventModel.subevents,
+                              event: eventModel,
+                            ),
+                          );
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+//<a href="https://www.vecteezy.com/free-vector/landscape">Landscape Vectors by Vecteezy</a>
+

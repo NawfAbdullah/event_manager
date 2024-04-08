@@ -1,6 +1,6 @@
-import 'package:event_manager/components/InvitationCard.dart';
-import 'package:event_manager/components/RequestCard.dart';
-import 'package:event_manager/components/SubmitButton.dart';
+import 'package:event_manager/components/cards/InvitationCard.dart';
+import 'package:event_manager/components/cards/RequestCard.dart';
+import 'package:event_manager/components/buttons/SubmitButton.dart';
 import 'package:event_manager/models/InvitationModel.dart';
 import 'package:event_manager/models/RequestModel.dart';
 import 'package:event_manager/models/UserModel.dart';
@@ -59,7 +59,7 @@ class Profile extends StatelessWidget {
           style: TextStyle(fontSize: 25),
         ),
         Container(
-          height: MediaQuery.of(context).size.height * 0.55,
+          height: MediaQuery.of(context).size.height * 0.52,
           child: FutureBuilder(
             future: request,
             builder: (context, snapshot) {
@@ -80,9 +80,9 @@ class Profile extends StatelessWidget {
                               }
                             },
                           )
-                        : Text('No Invitations');
+                        : const Text('No Invitations');
                   } else {
-                    return CircularProgressIndicator();
+                    return const Center(child: CircularProgressIndicator());
                   }
               }
             },
@@ -111,7 +111,7 @@ class Profile extends StatelessWidget {
                 style: TextStyle(
                   decoration: TextDecoration.underline,
                   decorationColor: Colors.redAccent,
-                  fontSize: 18,
+                  fontSize: 16,
                   color: Colors.redAccent,
                 ),
               ),

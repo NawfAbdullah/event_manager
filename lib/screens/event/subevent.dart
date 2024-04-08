@@ -1,5 +1,5 @@
-import 'package:event_manager/components/SubEventCard.dart';
-import 'package:event_manager/components/SubmitButton.dart';
+import 'package:event_manager/components/cards/SubEventCard.dart';
+import 'package:event_manager/components/buttons/SubmitButton.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/add_sub_event.dart';
 import 'package:flutter/material.dart';
@@ -35,11 +35,11 @@ class _SubEventState extends State<SubEvent> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          height: MediaQuery.of(context).size.height * 0.75,
+          height: MediaQuery.of(context).size.height * 0.44,
           child: ListView.builder(
               itemCount: widget.subEvents.length,
               itemBuilder: (context, index) {

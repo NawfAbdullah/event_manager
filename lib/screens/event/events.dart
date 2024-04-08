@@ -1,4 +1,6 @@
-import 'package:event_manager/components/EventCard.dart';
+import 'package:event_manager/components/cards/EventCard.dart';
+import 'package:event_manager/components/cards/TheCard.dart';
+import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/create_event.dart';
 import 'package:event_manager/screens/profile.dart';
@@ -30,22 +32,34 @@ class _EventScreenState extends State<EventScreen> {
               MainEvent(),
               Profile(),
             ]
-          : [
-              MyEvents(),
-              Scanner(),
-              MainEvent(),
-              Profile(),
-            ];
+          : widget.role == 'participant'
+              ? [
+                  MyEvents(),
+                  MainEvent(),
+                ]
+              : [
+                  MyEvents(),
+                  Scanner(),
+                  MainEvent(),
+                  Profile(),
+                ];
     });
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Events')),
+      appBar: AppBar(
+        leading: Image.asset(
+          'assets/images/leader.png',
+          width: 100,
+        ),
+        title: const Text('Events'),
+        centerTitle: true,
+      ),
       body: screens[current_index],
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: current_index,
-          selectedItemColor: Color.fromARGB(255, 121, 94, 217),
+          selectedItemColor: Color(0xff92a95f),
           unselectedItemColor: Colors.grey,
           onTap: (value) {
             setState(() {
@@ -65,16 +79,23 @@ class _EventScreenState extends State<EventScreen> {
                   const BottomNavigationBarItem(
                       icon: Icon(Icons.person), label: 'Profile'),
                 ]
-              : [
-                  const BottomNavigationBarItem(
-                      icon: Icon(Icons.home), label: 'Home'),
-                  const BottomNavigationBarItem(
-                      icon: Icon(Icons.scanner), label: 'Scanner'),
-                  const BottomNavigationBarItem(
-                      icon: Icon(Icons.calendar_month), label: 'Calendar'),
-                  const BottomNavigationBarItem(
-                      icon: Icon(Icons.person), label: 'Profile'),
-                ]),
+              : widget.role == 'participant'
+                  ? [
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.home), label: 'Home'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.calendar_month), label: 'Calendar'),
+                    ]
+                  : [
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.home), label: 'Home'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.scanner), label: 'Scanner'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.calendar_month), label: 'Calendar'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.person), label: 'Profile'),
+                    ]),
     );
   }
 }
@@ -145,39 +166,62 @@ class _MyEventsState extends State<MyEvents> {
   Future<List<EventModel>> events = fetchMyEvents();
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: events,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(child: CircularProgressIndicator());
-            default:
-              if (snapshot.hasError) {
-                print(snapshot.error);
-                return const Center(
-                  child: Text('No events'),
-                );
-              } else if (snapshot.hasData) {
-                print('xxxxxxxxxxvrsgrdfgrdf');
-                print(snapshot.data);
-                return ListView.builder(
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: (context, index) {
-                      return EventCard(
-                        eventModel: snapshot.data?[index] ??
-                            EventModel(
-                              id: '',
-                              name: '',
-                              start: DateTime.now(),
-                              end: DateTime.now(),
-                              department: '',
-                            ),
-                      );
-                    });
-              } else {
-                return CircularProgressIndicator();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        TheCard(
+          'Hey Shakir',
+          icon: Icons.notifications_active,
+          subText: 'Student Coordinator',
+        ),
+        FutureBuilder(
+            future: events,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return const Center(child: CircularProgressIndicator());
+                default:
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return const Center(
+                      child: Text('No events'),
+                    );
+                  } else if (snapshot.hasData) {
+                    print(snapshot.data);
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: ListView.builder(
+                          itemCount: snapshot.data?.length,
+                          itemBuilder: (context, index) {
+                            return EventCard(
+                              eventModel: snapshot.data?[index] ??
+                                  EventModel(
+                                    id: '',
+                                    name: '',
+                                    start: DateTime.now(),
+                                    end: DateTime.now(),
+                                    department: '',
+                                  ),
+                            );
+                          }),
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
               }
-          }
-        });
+            }),
+      ],
+    );
   }
 }
+
+
+
+//<a href="https://www.flaticon.com/free-icons/events" title="events icons">Events icons created by Freepik - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/event" title="event icons">Event icons created by Freepik - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/welcome" title="welcome icons">Welcome icons created by Design Circle - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/thunder" title="thunder icons">Thunder icons created by Freepik - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/radar" title="radar icons">Radar icons created by Freepik - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/leadership" title="leadership icons">Leadership icons created by Becris - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/leader" title="leader icons">Leader icons created by Flat Icons - Flaticon</a>
+

@@ -20,6 +20,14 @@ class EventCard extends StatelessWidget {
     'Nov',
     'Dec'
   ];
+
+  Map<String, String> dept_decr = {
+    'cse': 'assets/images/desktop.png',
+    "ece": 'assets/images/satellite-dish.png',
+    "eee": 'assets/images/lighting.png',
+    "mech": 'assets/images/construction.png',
+    "biotech": 'assets/images/biology.png',
+  };
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -30,45 +38,41 @@ class EventCard extends StatelessWidget {
                 )));
       },
       child: Container(
-        decoration: kCardDecoration.copyWith(
-          color: Colors.white,
-          boxShadow: [
-            const BoxShadow(
-              color: const Color.fromARGB(31, 82, 81, 81),
-              offset: Offset(4, 6),
-              blurRadius: 10,
-              spreadRadius: 10,
-            )
-          ],
-        ),
-        height: 100,
+        decoration: kCardDecoration,
+        height: 80,
         width: MediaQuery.sizeOf(context).width - 15,
-        margin: EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 5,
-              height: 95,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 121, 94, 217),
-                  borderRadius: BorderRadius.all(Radius.circular(5))),
-              padding: EdgeInsets.all(10),
-            ),
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                width: 50,
+                height: 50,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Color(0xffFCFFF1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Image.asset(
+                  dept_decr[eventModel.department] ?? '',
+                  width: 20,
+                )),
             Container(
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     eventModel.name,
-                    style: TextStyle(fontSize: 30),
+                    style: const TextStyle(fontSize: 20),
                   ),
                   Text(
                     '${eventModel.start.day} ${months[eventModel.start.month]} ${eventModel.end != eventModel.start ? '-' : ''} ${eventModel.end != eventModel.start ? eventModel.end.day : ''} ${eventModel.end != eventModel.start ? months[eventModel.end.month] : ''}',
-                    style: TextStyle(
-                      fontSize: 20,
+                    style: const TextStyle(
+                      fontSize: 15,
                       color: Color.fromARGB(255, 158, 148, 148),
                     ),
                     textAlign: TextAlign.left,
@@ -82,3 +86,6 @@ class EventCard extends StatelessWidget {
     );
   }
 }
+//<a href="https://www.flaticon.com/free-icons/computer" title="computer icons">Computer icons created by Freepik - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/biology" title="biology icons">Biology icons created by Eucalyp - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/construction" title="construction icons">Construction icons created by wanicon - Flaticon</a>

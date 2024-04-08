@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:event_manager/components/SubmitButton.dart';
+import 'package:event_manager/components/buttons/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/event.dart';
@@ -15,7 +15,7 @@ class CreateEvent extends StatefulWidget {
 }
 
 class _CreateEventState extends State<CreateEvent> {
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   String name = '';
   String department = '';
   String start = '';
@@ -64,7 +64,7 @@ class _CreateEventState extends State<CreateEvent> {
                 decoration: kInputdecoration.copyWith(
                     labelText: 'Department', hintText: ''),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               TextField(

@@ -1,4 +1,4 @@
-import 'package:event_manager/components/BillCard.dart';
+import 'package:event_manager/components/cards/BillCard.dart';
 import 'package:event_manager/models/BillModel.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:flutter/material.dart';
