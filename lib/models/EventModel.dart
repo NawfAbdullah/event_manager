@@ -128,9 +128,10 @@ Future<List<EventModel>> fetchMyEvents() async {
 
     if (user.myEvents.length > 0) {
       for (var i = 0; i < user.myEvents.length; i++) {
+        print(user.myEvents[i]);
         final response = await get(
             Uri.parse(
-                'https://event-management-backend.up.railway.app/api/event/get-one?id=${user.myEvents[i]}'),
+                'https://event-management-backend.up.railway.app/api/event/get-one?id=${user.myEvents[i] is String ? user.myEvents[i] : user.myEvents[i]['event_id']}'),
             headers: {
               'session_token': session ?? '',
             });
@@ -154,21 +155,28 @@ Future<List<EventModel>> fetchMyEvents() async {
   return currentEvent;
 }
 
+//{_id: 66148b9afd5e9ba98f1cf91b, name: Hackathon, description: You heard it right! This is damn good baby, img: https://images.pexels.com/photos/20732688/pexels-photo-20732688/free-photo-of-man-in-suit-standing-in-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2}
 class SubEventModel {
   final String name;
   final String eventManager;
   final String id;
+  final String description;
+  final String img;
   List<String> participants = [];
   SubEventModel({
     required this.name,
     required this.eventManager,
     required this.id,
+    required this.description,
+    required this.img,
   });
 
   SubEventModel.fromJson(Map<String, dynamic> json)
       : name = json['name'],
         id = json['_id'],
-        eventManager = json["event_manager"]?["name"] ?? '';
+        eventManager = json["event_manager"]?["name"] ?? '',
+        description = json['description'],
+        img = json['img'];
 }
 
 List<String> parseStringToList(String input) {

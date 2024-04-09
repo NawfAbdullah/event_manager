@@ -22,11 +22,14 @@ class _EventState extends State<Event> {
   late final Future<EventModel> fullEvent;
   FlutterSecureStorage storage = FlutterSecureStorage();
   String id = '';
+  String role = '';
   int curr_index = 0;
   Future<void> setId() async {
     String? userId = await storage.read(key: 'user_id');
+    String? _role = await storage.read(key: 'role');
     setState(() {
       id = userId ?? '';
+      role = _role ?? '';
     });
   }
 
@@ -94,41 +97,43 @@ class _EventState extends State<Event> {
       //   title: Text(widget.eventModel.name),
       // ),
       body: screens[curr_index],
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex: curr_index,
-          selectedItemColor: const Color(0xff92a95f),
-          unselectedItemColor: Colors.grey,
-          onTap: (value) {
-            setState(() {
-              curr_index = value;
-            });
-          },
-          items: id == widget.eventModel.studentId
-              ? [
-                  const BottomNavigationBarItem(
-                      icon: Icon(Icons.event), label: 'Sub Events'),
-                  const BottomNavigationBarItem(
-                      icon: Icon(Icons.supervised_user_circle_sharp),
-                      label: 'organizers'),
-                  const BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.request_page_rounded,
+      bottomNavigationBar: role == 'participant'
+          ? null
+          : BottomNavigationBar(
+              currentIndex: curr_index,
+              selectedItemColor: const Color(0xff92a95f),
+              unselectedItemColor: Colors.grey,
+              onTap: (value) {
+                setState(() {
+                  curr_index = value;
+                });
+              },
+              items: id == widget.eventModel.studentId
+                  ? [
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.event), label: 'Sub Events'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.supervised_user_circle_sharp),
+                          label: 'organizers'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(
+                            Icons.request_page_rounded,
+                          ),
+                          label: 'Requests'),
+                      const BottomNavigationBarItem(
+                        icon: Icon(
+                          Icons.inventory_outlined,
+                        ),
+                        label: 'Invite',
                       ),
-                      label: 'Requests'),
-                  const BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.inventory_outlined,
-                    ),
-                    label: 'Invite',
-                  ),
-                ]
-              : [
-                  const BottomNavigationBarItem(
-                      icon: Icon(Icons.event), label: 'Sub Events'),
-                  const BottomNavigationBarItem(
-                      icon: Icon(Icons.supervised_user_circle_sharp),
-                      label: 'organizers'),
-                ]),
+                    ]
+                  : [
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.event), label: 'Sub Events'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.supervised_user_circle_sharp),
+                          label: 'organizers'),
+                    ]),
     );
   }
 }
@@ -138,6 +143,20 @@ class MainEventScreen extends StatelessWidget {
       {super.key, required this.fullEvent, required this.eventModel});
   Future<EventModel> fullEvent;
   EventModel eventModel;
+  List<String> months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +185,8 @@ class MainEventScreen extends StatelessWidget {
                 TheCard(
                   eventModel.name,
                   icon: Icons.calendar_month,
-                  subText: '19th may',
+                  subText:
+                      '${eventModel.start.day} ${months[eventModel.start.month]} ${eventModel.end != eventModel.start ? '-' : ''} ${eventModel.end != eventModel.start ? eventModel.end.day : ''} ${eventModel.end != eventModel.start ? months[eventModel.end.month] : ''}',
                 ),
                 FutureBuilder(
                   future: fullEvent,

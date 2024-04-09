@@ -18,10 +18,13 @@ class SubEvent extends StatefulWidget {
 class _SubEventState extends State<SubEvent> {
   FlutterSecureStorage storage = FlutterSecureStorage();
   String id = '';
+  String role = '';
   Future<void> setId() async {
     String? userId = await storage.read(key: 'user_id');
+    String? role_ = await storage.read(key: 'role');
     setState(() {
       id = userId ?? '';
+      role = role_ ?? "";
     });
   }
 

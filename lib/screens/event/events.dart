@@ -42,6 +42,7 @@ class _EventScreenState extends State<EventScreen> {
                     user: widget.user,
                   ),
                   MainEvent(),
+                  Profile()
                 ]
               : [
                   MyEvents(
@@ -93,6 +94,8 @@ class _EventScreenState extends State<EventScreen> {
                           icon: Icon(Icons.home), label: 'Home'),
                       const BottomNavigationBarItem(
                           icon: Icon(Icons.calendar_month), label: 'Calendar'),
+                      const BottomNavigationBarItem(
+                          icon: Icon(Icons.person), label: 'Profile'),
                     ]
                   : [
                       const BottomNavigationBarItem(
