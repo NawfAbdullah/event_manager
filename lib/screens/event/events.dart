@@ -2,14 +2,16 @@ import 'package:event_manager/components/cards/EventCard.dart';
 import 'package:event_manager/components/cards/TheCard.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
+import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/event/create_event.dart';
 import 'package:event_manager/screens/profile.dart';
 import 'package:event_manager/screens/scanner/scanner.dart';
 import 'package:flutter/material.dart';
 
 class EventScreen extends StatefulWidget {
-  EventScreen({super.key, required this.role});
+  EventScreen({super.key, required this.role, required this.user});
   String role;
+  User user;
   @override
   State<EventScreen> createState() => _EventScreenState();
 }
@@ -26,7 +28,9 @@ class _EventScreenState extends State<EventScreen> {
     setState(() {
       screens = widget.role == 'studentcoordinator'
           ? [
-              MyEvents(),
+              MyEvents(
+                user: widget.user,
+              ),
               Scanner(),
               CreateEvent(),
               MainEvent(),
@@ -34,11 +38,15 @@ class _EventScreenState extends State<EventScreen> {
             ]
           : widget.role == 'participant'
               ? [
-                  MyEvents(),
+                  MyEvents(
+                    user: widget.user,
+                  ),
                   MainEvent(),
                 ]
               : [
-                  MyEvents(),
+                  MyEvents(
+                    user: widget.user,
+                  ),
                   Scanner(),
                   MainEvent(),
                   Profile(),
@@ -132,8 +140,6 @@ class _MainEventState extends State<MainEvent> {
                   child: Text('Something went wrong'),
                 );
               } else if (snapshot.hasData) {
-                print('xxxxxxxxxxvrsgrdfgrdf');
-                print(snapshot.data);
                 return ListView.builder(
                     itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
@@ -156,7 +162,8 @@ class _MainEventState extends State<MainEvent> {
 }
 
 class MyEvents extends StatefulWidget {
-  const MyEvents({super.key});
+  MyEvents({super.key, required this.user});
+  User user;
 
   @override
   State<MyEvents> createState() => _MyEventsState();
@@ -170,9 +177,9 @@ class _MyEventsState extends State<MyEvents> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         TheCard(
-          'Hey Shakir',
+          'Hey ${widget.user.name}',
           icon: Icons.notifications_active,
-          subText: 'Student Coordinator',
+          subText: widget.user.role,
         ),
         FutureBuilder(
             future: events,

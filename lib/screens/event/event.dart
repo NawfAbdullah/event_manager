@@ -32,10 +32,12 @@ class _EventState extends State<Event> {
 
   @override
   void initState() {
+    super.initState();
     setId();
     fullEvent = fetchEvent(widget.eventModel);
+    print('sosfofesdf');
+    print(widget.eventModel.subevents);
     screens = [
-      // ,
       MainEventScreen(fullEvent: fullEvent, eventModel: widget.eventModel),
       ListOfMembers(event: widget.eventModel),
       Container(
@@ -59,14 +61,31 @@ class _EventState extends State<Event> {
                 ],
               ),
       ),
-      UsersList(
-        eventId: widget.eventModel.id,
-        subEventId: widget.eventModel.subevents.length > 0
-            ? widget.eventModel.subevents[0].id
-            : '',
-      ),
+      FutureBuilder(
+          future: fullEvent,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+
+              default:
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                } else if (snapshot.hasData) {
+                  return UsersList(
+                    eventId: widget.eventModel.id,
+                    subEvents: snapshot.data!.subevents,
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+            }
+          }),
     ];
-    super.initState();
   }
 
   Widget build(BuildContext context) {
@@ -77,7 +96,7 @@ class _EventState extends State<Event> {
       body: screens[curr_index],
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: curr_index,
-          selectedItemColor: const Color.fromARGB(255, 121, 94, 217),
+          selectedItemColor: const Color(0xff92a95f),
           unselectedItemColor: Colors.grey,
           onTap: (value) {
             setState(() {
@@ -184,4 +203,4 @@ class MainEventScreen extends StatelessWidget {
 }
 
 //<a href="https://www.vecteezy.com/free-vector/landscape">Landscape Vectors by Vecteezy</a>
-
+//<a href="https://www.flaticon.com/free-icons/branch" title="branch icons">Branch icons created by Good Ware - Flaticon</a>

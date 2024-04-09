@@ -50,6 +50,10 @@ class _AddSubEventState extends State<AddSubEvent> {
                     body: jsonEncode({
                       'name': subEventName,
                       'event_id': widget.event.id,
+                      "description":
+                          "You heard it right! This is damn good baby",
+                      "img":
+                          "https://images.pexels.com/photos/20732688/pexels-photo-20732688/free-photo-of-man-in-suit-standing-in-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                     }),
                     headers: {
                       'content-type': 'application/json',

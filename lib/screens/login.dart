@@ -126,9 +126,8 @@ class _loginScreenState extends State<loginScreen> {
                       );
                       User user = await getUser();
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => EventScreen(
-                                role: user.role,
-                              )));
+                          builder: (context) =>
+                              EventScreen(role: user.role, user: user)));
                     } else {
                       setState(() {
                         isLoading = false;

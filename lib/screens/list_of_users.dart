@@ -1,13 +1,14 @@
 import 'dart:convert';
+import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
 class UsersList extends StatefulWidget {
-  UsersList({super.key, required this.eventId, required this.subEventId});
+  UsersList({super.key, required this.eventId, required this.subEvents});
   String eventId;
-  String subEventId;
+  List<SubEventModel> subEvents;
   @override
   State<UsersList> createState() => _UsersListState();
 }
@@ -22,6 +23,8 @@ class _UsersListState extends State<UsersList> {
 
   @override
   Widget build(BuildContext context) {
+    print('assr');
+    print(widget.subEvents);
     return FutureBuilder(
       future: users,
       builder: (context, snapshot) {
@@ -41,7 +44,7 @@ class _UsersListState extends State<UsersList> {
                 itemBuilder: (context, index) {
                   return ListItem(
                     eventId: widget.eventId,
-                    subEventId: widget.subEventId,
+                    subEvents: widget.subEvents,
                     curr_user: snapshot.data![index],
                   );
                 },
@@ -61,24 +64,62 @@ class ListItem extends StatefulWidget {
   ListItem(
       {super.key,
       required this.eventId,
-      required this.subEventId,
+      required this.subEvents,
       required this.curr_user});
   final String eventId;
-  final String subEventId;
+  List<SubEventModel> subEvents;
   final KuttyUser curr_user;
   @override
   State<ListItem> createState() => _ListItemState();
 }
 
 class _ListItemState extends State<ListItem> {
-  String text = 'Invite';
   bool invited = false;
+  String position = 'treasurer';
+  String text = '';
+  String error = '';
+  String subEventId = '';
   @override
   Widget build(BuildContext context) {
+    print('buruuuc');
+    print(widget.subEvents.length);
+    for (var element in widget.subEvents) {
+      print('xxx');
+      print(element.name);
+    }
+    List<DropdownMenuItem> items = widget.subEvents
+        .map((e) => DropdownMenuItem(
+              value: e.id,
+              child: Text(e.name),
+            ))
+        .toList();
+    print(items);
+    text = 'Invite as $position';
     return ListTile(
       title: Text(widget.curr_user.name),
-      subtitle: Text(widget.curr_user.email),
+      subtitle: position == 'eventmanager'
+          ? DropdownButton(
+              hint: Text('Sub Event'),
+              style: const TextStyle(color: Colors.black),
+              icon: const Icon(Icons.lock_person),
+              items: items,
+              onChanged: (value) {
+                setState(() {
+                  subEventId = value ?? '';
+                });
+              })
+          : Text(widget.curr_user.email),
       trailing: GestureDetector(
+          onLongPress: () {
+            setState(() {
+              position = position == 'treasurer' ? 'volunteer' : 'treasurer';
+            });
+          },
+          onDoubleTap: () {
+            setState(() {
+              position = 'eventmanager';
+            });
+          },
           onTap: () async {
             FlutterSecureStorage storage = FlutterSecureStorage();
             final id = await storage.read(key: 'sessionId');
@@ -88,9 +129,9 @@ class _ListItemState extends State<ListItem> {
                 ),
                 body: jsonEncode({
                   "from_event": widget.eventId,
-                  "from_sub_event": widget.subEventId,
+                  "from_sub_event": subEventId,
                   "to_user": widget.curr_user.id,
-                  "position": "treasurer"
+                  "position": position
                 }),
                 headers: {
                   'Content-type': 'application/json',
@@ -105,7 +146,7 @@ class _ListItemState extends State<ListItem> {
               });
             } else {
               setState(() {
-                text = 'Invited';
+                text = 'Invited as $position';
               });
             }
           },

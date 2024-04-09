@@ -1,3 +1,4 @@
+import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/event/events.dart';
 import 'package:event_manager/screens/login.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class _MainScreenState extends State<MainScreen> {
   bool isLoggedIn = false;
   FlutterSecureStorage _storage = FlutterSecureStorage();
   String role = '';
+  User user = User(name: '', role: '');
   @override
   void initState() {
     // TODO: implement initState
@@ -49,7 +51,9 @@ class _MainScreenState extends State<MainScreen> {
     bool isLogged = await _storage.read(key: 'sessionId') != null;
 
     final x = await _storage.read(key: 'role');
+    final name = await _storage.read(key: 'name');
     setState(() {
+      user = User(name: name ?? '', role: x ?? '');
       role = x ?? '';
       isLoggedIn = isLogged;
     });
@@ -57,6 +61,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoggedIn ? EventScreen(role: role) : loginScreen();
+    return isLoggedIn
+        ? EventScreen(
+            role: role,
+            user: user,
+          )
+        : loginScreen();
   }
 }

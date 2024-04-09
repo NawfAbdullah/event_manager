@@ -4,10 +4,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
 class User {
-  User({name, email, department, id});
-  late String name;
+  User({required this.name, email, department, id, required this.role});
+  String name;
   late String email;
-  late String role;
+  String role;
   late String sessionId;
   late String id;
   late List<dynamic> myEvents = [];

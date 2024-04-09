@@ -95,13 +95,17 @@ class _CreateEventState extends State<CreateEvent> {
                               "name": name,
                               "date_from": start,
                               "department": department,
-                              "date_to": null
+                              "date_to": null,
+                              "img":
+                                  "https://images.pexels.com/photos/20732688/pexels-photo-20732688/free-photo-of-man-in-suit-standing-in-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                             }
                           : {
                               "name": name,
                               "date_from": start,
                               "date_to": end,
-                              "department": department
+                              "department": department,
+                              "img":
+                                  "https://images.pexels.com/photos/20732688/pexels-photo-20732688/free-photo-of-man-in-suit-standing-in-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                             }),
                       headers: {
                         "Content-Type": "application/json",

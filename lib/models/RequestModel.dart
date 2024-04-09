@@ -9,6 +9,7 @@ class RequestModel {
   final String forEvent;
   final String toSubEvent;
   final String position;
+  final String? profile;
   String status;
   final DateTime requestedOn;
   RequestModel(
@@ -18,7 +19,8 @@ class RequestModel {
       required this.toSubEvent,
       required this.position,
       required this.status,
-      required this.requestedOn});
+      required this.requestedOn,
+      required this.profile});
 
   RequestModel.fromJSON(Map<String, dynamic> json)
       : id = json['_id'],
@@ -27,7 +29,10 @@ class RequestModel {
         toSubEvent = json['to_sub_event']?["name"] ?? '',
         position = json["position"],
         status = json["status"],
-        requestedOn = DateTime.parse(json["request_made_date"]);
+        requestedOn = DateTime.parse(
+          json["request_made_date"],
+        ),
+        profile = json['request_by']?['profile'];
 }
 
 Future<List<RequestModel>> getAllRequests(String eventId) async {
