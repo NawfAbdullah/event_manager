@@ -36,7 +36,7 @@ class _AddSubEventState extends State<AddSubEvent> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           SubmitButton(

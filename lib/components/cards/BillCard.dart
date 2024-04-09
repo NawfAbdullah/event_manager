@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/BillModel.dart';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/participants/participants.dart';
@@ -27,7 +28,8 @@ class _BillCardState extends State<BillCard> {
   FlutterSecureStorage storage = const FlutterSecureStorage();
   bool isLoading = false;
   String id = '';
-  Color back = Colors.white;
+  Color back = Color.fromARGB(255, 228, 243, 195);
+  String remark = '';
   Future<void> setId() async {
     String? userId = await storage.read(key: 'user_id');
     setState(() {
@@ -51,57 +53,81 @@ class _BillCardState extends State<BillCard> {
               child: CircularProgressIndicator(
               strokeWidth: 10,
             ))
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.bill.name,
-                      style: const TextStyle(
-                          fontSize: 25, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.left,
-                    ),
-                    Tablet(
-                        color: widget.bill.status == 'accepted'
-                            ? Colors.green
-                            : Colors.redAccent,
-                        text: widget.bill.status,
-                        icon: Icons.verified)
-                  ],
-                ),
-                Text(
-                  widget.bill.description,
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(fontSize: 20),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network(
-                    widget.bill.img,
-                    width: MediaQuery.of(context).size.width,
+          : Container(
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              width: MediaQuery.of(context).size.width * 0.91,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.bill.name,
+                        style: const TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.left,
+                      ),
+                      Tablet(
+                          color: widget.bill.status == 'accepted'
+                              ? Colors.green
+                              : Colors.redAccent,
+                          text: widget.bill.status,
+                          icon: Icons.verified)
+                    ],
                   ),
-                ),
-                id == widget.treasurer?.id && widget.bill.status == "waiting"
-                    ? ButtonBar(
-                        children: [
-                          TextButton.icon(
-                            onPressed: () => respond("accepted"),
-                            icon: const Icon(Icons.approval),
-                            label: Text('Approve'),
-                          ),
-                          TextButton.icon(
-                              onPressed: () => respond("rejected"),
-                              icon: const Icon(Icons.cloud_circle_sharp),
-                              label: const Text('Deny'))
-                        ],
-                      )
-                    : const SizedBox(
-                        height: 5,
-                      )
-              ],
+                  Text(
+                    widget.bill.description,
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.network(
+                      widget.bill.img,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  id == widget.treasurer?.id && widget.bill.status == "waiting"
+                      ? Column(
+                          children: [
+                            TextField(
+                              decoration: kInputdecoration.copyWith(
+                                  hintText: '', labelText: 'Remarks'),
+                              onChanged: (value) {
+                                setState(() {
+                                  remark = value;
+                                });
+                              },
+                            ),
+                            ButtonBar(
+                              children: [
+                                TextButton.icon(
+                                  onPressed: () => respond("accepted"),
+                                  icon: const Icon(Icons.approval),
+                                  label: Text('Approve'),
+                                ),
+                                TextButton.icon(
+                                    onPressed: () => respond("rejected"),
+                                    icon: const Icon(Icons.cloud_circle_sharp),
+                                    label: const Text('Deny'))
+                              ],
+                            ),
+                          ],
+                        )
+                      : Text(
+                          "Treasurer words : ${widget.bill.remarks}",
+                          style: const TextStyle(color: Colors.black),
+                        )
+                ],
+              ),
             ),
     );
   }
@@ -121,7 +147,7 @@ class _BillCardState extends State<BillCard> {
           "sub_event_id": widget.subEventId,
           "bill_id": widget.bill.billId,
           "status": status, // accepted or rejected
-          "message": "Good one mi amigo" // not-required
+          "message": remark // not-required
         }),
         headers: {
           'content-type': 'application/json',
@@ -133,11 +159,6 @@ class _BillCardState extends State<BillCard> {
         isLoading = false;
         back = Colors.greenAccent;
         widget.bill.status = status;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-        back = Colors.redAccent;
       });
     }
   }

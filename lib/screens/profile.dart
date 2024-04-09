@@ -1,6 +1,7 @@
 import 'package:event_manager/components/cards/InvitationCard.dart';
 import 'package:event_manager/components/cards/RequestCard.dart';
 import 'package:event_manager/components/buttons/SubmitButton.dart';
+import 'package:event_manager/components/cards/TheCard.dart';
 import 'package:event_manager/models/InvitationModel.dart';
 import 'package:event_manager/models/RequestModel.dart';
 import 'package:event_manager/models/UserModel.dart';
@@ -30,25 +31,28 @@ class Profile extends StatelessWidget {
                   if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   } else if (snapshot.hasData) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hi,${snapshot.data?.name}',
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 40),
-                        ),
-                        Text(
-                          '${snapshot.data?.role}',
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 25,
-                          ),
-                        )
-                      ],
-                    );
+                    return TheCard('Hi,${snapshot.data?.name}',
+                        icon: Icons.notifications,
+                        subText: snapshot.data?.role ?? '');
+                    // return Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   children: [
+                    //     Text(
+                    //       'Hi,${snapshot.data?.name}',
+                    //       textAlign: TextAlign.left,
+                    //       style: const TextStyle(fontSize: 40),
+                    //     ),
+                    //     Text(
+                    //       '${snapshot.data?.role}',
+                    //       textAlign: TextAlign.left,
+                    //       style: const TextStyle(
+                    //         color: Colors.grey,
+                    //         fontSize: 25,
+                    //       ),
+                    //     )
+                    //   ],
+                    // );
                   } else {
                     return CircularProgressIndicator();
                   }

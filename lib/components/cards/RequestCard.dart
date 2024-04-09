@@ -124,10 +124,11 @@ class _RequestCardState extends State<RequestCard> {
                       ],
                     )
                   : SizedBox(
-                      width: 200,
+                      width: 100,
                       child: Tablet(
-                        color: widget.requestModel.status == 'approved'
-                            ? Colors.greenAccent
+                        color: widget.requestModel.status == 'approved' ||
+                                widget.requestModel.status == 'accepted'
+                            ? const Color.fromARGB(255, 0, 255, 132)
                             : Colors.redAccent,
                         text: widget.requestModel.status,
                         icon: Icons.verified,

@@ -47,15 +47,6 @@ class _loginScreenState extends State<loginScreen> {
                     ),
                   ),
                 ),
-                // const Text(
-                //   'there!',
-                //   textAlign: TextAlign.left,
-                //   style: TextStyle(
-                //     fontSize: 40,
-                //     color: Color.fromARGB(255, 135, 135, 135),
-                //     fontWeight: FontWeight.w900,
-                //   ),
-                // ),
                 SvgPicture.asset(
                   'assets/images/sunlight.svg',
                   width: MediaQuery.of(context).size.width * 0.4,

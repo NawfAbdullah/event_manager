@@ -1,3 +1,4 @@
+import 'package:accordion/accordion.dart';
 import 'package:event_manager/models/ParticipantModel.dart';
 import 'package:flutter/material.dart';
 
@@ -29,41 +30,47 @@ class ParticipantsList extends StatelessWidget {
               } else if (snapshot.hasData) {
                 return ListView.builder(
                     itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) => Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: ListTile(
-                                contentPadding: EdgeInsets.all(10),
-                                tileColor: Colors.white,
-                                title: Row(
+                    itemBuilder: (context, index) => Accordion(
+                            headerPadding: const EdgeInsets.symmetric(
+                              vertical: 20,
+                              horizontal: 5,
+                            ),
+                            children: [
+                              AccordionSection(
+                                headerBorderRadius: 30,
+                                contentVerticalPadding: 20,
+                                leftIcon: Image.asset(
+                                  'assets/images/medal.png',
+                                  width: 50,
+                                ),
+                                headerBackgroundColor: const Color(0xffC5D99A),
+                                headerBorderColor: const Color(0xffC5D99A),
+                                header: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       snapshot.data![index].name,
                                       style: const TextStyle(
-                                        fontSize: 30,
-                                        color:
-                                            Color.fromARGB(255, 136, 121, 242),
-                                      ),
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     snapshot.data![index].isVerified
                                         ? Tablet(
-                                            color: const Color.fromARGB(
-                                                255, 30, 219, 128),
+                                            color: Color.fromARGB(
+                                                255, 41, 149, 97),
                                             icon: Icons.verified,
                                             text: 'Verified',
                                           )
                                         : Tablet(
-                                            color: Colors.redAccent,
+                                            color: Color.fromARGB(
+                                                255, 184, 64, 64),
                                             text: "pending",
                                             icon: Icons.stop_circle),
                                   ],
                                 ),
-                                subtitle: Column(
+                                content: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -135,10 +142,38 @@ class ParticipantsList extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                              ),
-                            ),
-                          ],
-                        ));
+                              )
+                            ])
+                    // Column(
+                    //       children: [
+                    //         Container(
+                    //           margin: EdgeInsets.symmetric(vertical: 10),
+                    //           decoration: BoxDecoration(
+                    //               borderRadius: BorderRadius.circular(5)),
+                    //           child: ListTile(
+                    //             contentPadding: EdgeInsets.all(10),
+                    //             tileColor: Colors.white,
+                    //             title: Row(
+                    //               mainAxisAlignment:
+                    //                   MainAxisAlignment.spaceBetween,
+                    //               children: [
+                    //                 Text(
+                    //                   snapshot.data![index].name,
+                    //                   style: const TextStyle(
+                    //                     fontSize: 30,
+                    //                     color:
+                    //                         Color.fromARGB(255, 136, 121, 242),
+                    //                   ),
+                    //                 ),
+
+                    //               ],
+                    //             ),
+
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    );
               } else {
                 return const Center(
                   child: CircularProgressIndicator(),
@@ -172,7 +207,7 @@ class Tablet extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
@@ -189,3 +224,6 @@ class Tablet extends StatelessWidget {
     );
   }
 }
+
+
+//<a href="https://www.flaticon.com/free-icons/trophy" title="trophy icons">Trophy icons created by Freepik - Flaticon</a>

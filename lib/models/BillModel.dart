@@ -10,21 +10,23 @@ class BillModel {
   final String img;
   final String description;
   final DateTime uploadedDate;
-  BillModel({
-    required this.billId,
-    required this.name,
-    required this.status,
-    required this.img,
-    required this.description,
-    required this.uploadedDate,
-  });
+  String remarks;
+  BillModel(
+      {required this.billId,
+      required this.name,
+      required this.status,
+      required this.img,
+      required this.description,
+      required this.uploadedDate,
+      required this.remarks});
   BillModel.fromJson(Map<String, dynamic> json)
       : billId = json["_id"],
         img = json["img"],
         name = json["uploaded_by"]["name"],
         description = json["description"],
         status = json["status"],
-        uploadedDate = DateTime.parse(json["bill_uploaded_date"]);
+        uploadedDate = DateTime.parse(json["bill_uploaded_date"]),
+        remarks = json['message_from_treasurer'] ?? '';
 }
 
 Future<List<BillModel>> getAllBills(String eventId, String subEventId) async {

@@ -66,6 +66,6 @@ class _MainScreenState extends State<MainScreen> {
             role: role,
             user: user,
           )
-        : loginScreen();
+        : const loginScreen();
   }
 }

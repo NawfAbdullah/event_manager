@@ -21,13 +21,20 @@ class RequestList extends StatelessWidget {
                 print('bulu bulu bulu');
                 print(snapshot.data);
                 return Text(snapshot.error.toString());
+              } else if (snapshot.data!.isEmpty) {
+                return const Center(
+                    child: Text(
+                  'No pending requests',
+                  style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xffC5D99A)),
+                ));
               } else if (snapshot.hasData) {
                 return ListView.builder(
                   itemCount: snapshot.data?.length,
                   itemBuilder: (context, index) {
-                    if (snapshot.data!.isEmpty) {
-                      return const Text('No pending requests');
-                    } else {
+                    if (snapshot.hasData) {
                       return RequestCard(
                           requestModel: snapshot.data?[index] ??
                               RequestModel(
@@ -39,6 +46,18 @@ class RequestList extends StatelessWidget {
                                   status: '',
                                   requestedOn: DateTime.now(),
                                   profile: null));
+                    } else if (snapshot.hasError) {
+                      return Center(
+                          child: Text(
+                        snapshot.error.toString(),
+                        style: const TextStyle(fontSize: 30),
+                      ));
+                    } else {
+                      return const Center(
+                          child: Text(
+                        'No pending requests',
+                        style: TextStyle(fontSize: 50, color: Colors.white),
+                      ));
                     }
                   },
                 );
