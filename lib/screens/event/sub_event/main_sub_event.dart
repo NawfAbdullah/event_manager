@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:event_manager/components/buttons/SubmitButton.dart';
+import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/billing/bills.dart';
 import 'package:event_manager/screens/billing/upload_bills.dart';
@@ -124,14 +125,41 @@ class _SubEventIntroductionState extends State<SubEventIntroduction> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Column(children: [
-            Row(children: [
-              Image.network(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
                 widget.subEventModel.img,
-                width: 200,
+                width: MediaQuery.of(context).size.width * 0.95,
+                height: MediaQuery.of(context).size.height * 0.45,
+                fit: BoxFit.cover,
               ),
-              Text(widget.subEventModel.name)
-            ]),
-            Text(widget.subEventModel.description)
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.365,
+              child: ListView(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    child: Text(
+                      widget.subEventModel.name,
+                      style: kTitleText.copyWith(fontSize: 30),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    child: Text(
+                      widget.subEventModel.description,
+                      style: kSubText.copyWith(color: Colors.grey),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ],
+              ),
+            )
           ]),
           widget.role != 'participant'
               ? SizedBox()

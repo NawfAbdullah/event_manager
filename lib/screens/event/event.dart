@@ -69,7 +69,7 @@ class _EventState extends State<Event> {
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
 
@@ -93,9 +93,6 @@ class _EventState extends State<Event> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(widget.eventModel.name),
-      // ),
       body: screens[curr_index],
       bottomNavigationBar: role == 'participant'
           ? null

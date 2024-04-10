@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:event_manager/components/buttons/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
@@ -6,6 +7,7 @@ import 'package:event_manager/screens/event/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateEvent extends StatefulWidget {
   const CreateEvent({super.key});
@@ -16,6 +18,7 @@ class CreateEvent extends StatefulWidget {
 
 class _CreateEventState extends State<CreateEvent> {
   final TextEditingController _controller = TextEditingController();
+  File? _imgFile;
   String name = '';
   String department = '';
   String start = '';
@@ -23,6 +26,17 @@ class _CreateEventState extends State<CreateEvent> {
   FlutterSecureStorage storage = FlutterSecureStorage();
   bool isLoading = false;
   String error = '';
+  void getPicker() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? img = await picker.pickImage(
+      source: ImageSource.gallery, // alternatively, use ImageSource.gallery
+      maxWidth: 400,
+    );
+    if (img == null) return;
+    setState(() {
+      _imgFile = File(img.path); // convert it to a Dart:io file
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +46,43 @@ class _CreateEventState extends State<CreateEvent> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              GestureDetector(
+                onTap: () => getPicker(),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _imgFile != null
+                          ? Image.file(
+                              _imgFile!,
+                              width: MediaQuery.of(context).size.width * 0.6,
+                            )
+                          : Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 200,
+                              color: const Color.fromARGB(255, 189, 255, 198),
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/photo.png',
+                                    width: 100,
+                                  ),
+                                  const Text(
+                                    'Upload',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                            )
+                    ]),
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -86,6 +137,8 @@ class _CreateEventState extends State<CreateEvent> {
                     isLoading = true;
                   });
                   final id = await storage.read(key: "sessionId");
+                  final bytes = File(_imgFile!.path).readAsBytesSync();
+                  String img64 = base64Encode(bytes);
                   final response = await post(
                       Uri.parse(
                         "https://event-management-backend.up.railway.app/api/event/create",
@@ -96,16 +149,14 @@ class _CreateEventState extends State<CreateEvent> {
                               "date_from": start,
                               "department": department,
                               "date_to": null,
-                              "img":
-                                  "https://images.pexels.com/photos/20732688/pexels-photo-20732688/free-photo-of-man-in-suit-standing-in-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                              "img": "data:image/png;base64," + img64,
                             }
                           : {
                               "name": name,
                               "date_from": start,
                               "date_to": end,
                               "department": department,
-                              "img":
-                                  "https://images.pexels.com/photos/20732688/pexels-photo-20732688/free-photo-of-man-in-suit-standing-in-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                              "img": "data:image/png;base64," + img64
                             }),
                       headers: {
                         "Content-Type": "application/json",

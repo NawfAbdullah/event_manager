@@ -189,7 +189,9 @@ class _MyEventsState extends State<MyEvents> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return const Center(child: CircularProgressIndicator());
+                  return const SizedBox(
+                      height: 200,
+                      child: Center(child: CircularProgressIndicator()));
                 default:
                   if (snapshot.hasError) {
                     print(snapshot.error);

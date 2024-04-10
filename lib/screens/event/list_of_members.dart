@@ -51,13 +51,10 @@ class ListOfMembers extends StatelessWidget {
                         ]),
                     child: Row(
                       children: [
-                        Positioned(
-                            top: 0,
-                            left: 0,
-                            child: Image.asset(
-                              'assets/images/budget.png',
-                              width: 40,
-                            )),
+                        Image.asset(
+                          'assets/images/budget.png',
+                          width: 40,
+                        ),
                         const SizedBox(
                           width: 10,
                         ),
@@ -108,15 +105,12 @@ class ListOfMembers extends StatelessWidget {
                               ]),
                           child: Row(
                             children: [
-                              Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  child: Image.asset(
-                                    x[index]['role'] == 'volunteer'
-                                        ? 'assets/images/branch.png'
-                                        : 'assets/images/risk.png',
-                                    width: 40,
-                                  )),
+                              Image.asset(
+                                x[index]['role'] == 'volunteer'
+                                    ? 'assets/images/branch.png'
+                                    : 'assets/images/risk.png',
+                                width: 40,
+                              ),
                               const SizedBox(
                                 width: 10,
                               ),

@@ -125,7 +125,7 @@ class _SubEventCardState extends State<SubEventCard> {
                                 body: jsonEncode({
                                   "event_id": widget.event.id,
                                   "sub_event_id": widget.subEvent.id,
-                                  "contact_no": "",
+                                  "contact_no": "8838149316",
                                   "college": "BS Abdur Rahman Crescent"
                                 }),
                                 headers: {
