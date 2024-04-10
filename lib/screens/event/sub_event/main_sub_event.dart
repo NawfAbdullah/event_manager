@@ -57,7 +57,7 @@ class _SubEventScaffoldState extends State<SubEventScaffold> {
         title: Text(widget.subEvent.name),
       ),
       body: screens[cur_index],
-      bottomNavigationBar: widget.role == 'particpant'
+      bottomNavigationBar: widget.role == 'participant'
           ? null
           : BottomNavigationBar(
               currentIndex: cur_index,
