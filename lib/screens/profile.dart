@@ -2,6 +2,7 @@ import 'package:event_manager/components/cards/InvitationCard.dart';
 import 'package:event_manager/components/cards/RequestCard.dart';
 import 'package:event_manager/components/buttons/SubmitButton.dart';
 import 'package:event_manager/components/cards/TheCard.dart';
+import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/InvitationModel.dart';
 import 'package:event_manager/models/RequestModel.dart';
 import 'package:event_manager/models/UserModel.dart';
@@ -32,38 +33,14 @@ class Profile extends StatelessWidget {
                     return Text(snapshot.error.toString());
                   } else if (snapshot.hasData) {
                     return TheCard('Hi,${snapshot.data?.name}',
-                        icon: Icons.notifications,
-                        subText: snapshot.data?.role ?? '');
-                    // return Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   children: [
-                    //     Text(
-                    //       'Hi,${snapshot.data?.name}',
-                    //       textAlign: TextAlign.left,
-                    //       style: const TextStyle(fontSize: 40),
-                    //     ),
-                    //     Text(
-                    //       '${snapshot.data?.role}',
-                    //       textAlign: TextAlign.left,
-                    //       style: const TextStyle(
-                    //         color: Colors.grey,
-                    //         fontSize: 25,
-                    //       ),
-                    //     )
-                    //   ],
-                    // );
+                        icon: Icons.edit, subText: snapshot.data?.role ?? '');
                   } else {
                     return CircularProgressIndicator();
                   }
               }
             }),
-        const Text(
-          'Invitations',
-          style: TextStyle(fontSize: 25),
-        ),
         Container(
-          height: MediaQuery.of(context).size.height * 0.52,
+          height: MediaQuery.of(context).size.height * 0.55,
           child: FutureBuilder(
             future: request,
             builder: (context, snapshot) {
@@ -84,7 +61,21 @@ class Profile extends StatelessWidget {
                               }
                             },
                           )
-                        : const Text('No Invitations');
+                        : Center(
+                            child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/empty-inbox.png',
+                                width: 200,
+                              ),
+                              const Text(
+                                'No Invitations',
+                                style: kSubText,
+                              ),
+                            ],
+                          ));
                   } else {
                     return const Center(child: CircularProgressIndicator());
                   }
@@ -126,3 +117,5 @@ class Profile extends StatelessWidget {
     );
   }
 }
+//<a href="https://www.flaticon.com/free-icons/empty" title="empty icons">Empty icons created by Freepik - Flaticon</a>
+//<a href="https://www.flaticon.com/free-icons/empty-inbox" title="empty inbox icons">Empty inbox icons created by andinur - Flaticon</a>

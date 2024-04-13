@@ -24,6 +24,10 @@ class _InvitationCardState extends State<InvitationCard> {
       margin: EdgeInsets.all(5),
       child: ListTile(
         tileColor: err_msg.length > 0 ? Colors.grey : backColor,
+        leading: Image.asset(
+          'assets/images/letter.png',
+          width: 50,
+        ),
         title: Text(
           err_msg.length > 0
               ? "Invitation Expired"
@@ -32,7 +36,7 @@ class _InvitationCardState extends State<InvitationCard> {
               fontSize: 20,
               color: err_msg.length > 0
                   ? const Color.fromARGB(255, 239, 225, 225)
-                  : Color.fromARGB(255, 158, 82, 239)),
+                  : Colors.black),
         ),
         subtitle: err_msg.length > 0
             ? const SizedBox()
@@ -147,7 +151,10 @@ class _InvitationCardState extends State<InvitationCard> {
                               }
                             },
                             child: Container(
-                              child: Text('Reject'),
+                              child: const Text(
+                                'Reject',
+                                style: TextStyle(color: Colors.redAccent),
+                              ),
                             ),
                           )
                         ],
@@ -164,3 +171,5 @@ class _InvitationCardState extends State<InvitationCard> {
     );
   }
 }
+
+//<a href="https://www.flaticon.com/free-icons/invitation" title="invitation icons">Invitation icons created by Vectors Tank - Flaticon</a>

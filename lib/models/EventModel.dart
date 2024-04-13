@@ -187,3 +187,38 @@ List<String> parseStringToList(String input) {
   List<String> elements = trimmedString.split(', ');
   return elements;
 }
+
+Future<List<EventModel>> fetchDayEvents(DateTime date) async {
+  print("${date.year}-0${date.month}-${date.day}");
+  const FlutterSecureStorage storage = FlutterSecureStorage();
+  final session = await storage.read(key: 'sessionId');
+  final response = await get(
+      Uri.parse(
+          'https://event-management-backend.up.railway.app/api/event/get-on-date?date=${date.year}-0${date.month}-${date.day}&include_sub_events=1'),
+      headers: {
+        'session_token': session ?? '',
+      });
+  print(response.body);
+  if (response.statusCode == 200) {
+    print('goot');
+    return parseEvents(response.body);
+  } else {
+    print(response.body);
+    throw Exception(response.body);
+  }
+}
+
+List<EventModel> parseEvents(String responseBody) {
+  final parsed =
+      (jsonDecode(responseBody) as List).cast<Map<String, dynamic>>();
+  List<EventModel> finale = [];
+  for (var i = 0; i < parsed.length; i++) {
+    try {
+      EventModel x = EventModel.fromJson(parsed[i]['data']);
+      finale.add(x);
+    } catch (err) {
+      print(err);
+    }
+  }
+  return finale;
+}

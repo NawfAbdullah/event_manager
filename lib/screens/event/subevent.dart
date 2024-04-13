@@ -6,8 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SubEvent extends StatefulWidget {
-  SubEvent({super.key, required this.subEvents, required this.event});
+  SubEvent(
+      {super.key,
+      required this.subEvents,
+      required this.event,
+      required this.role});
   List<SubEventModel> subEvents;
+  String role;
 
   EventModel event;
 
@@ -42,7 +47,8 @@ class _SubEventState extends State<SubEvent> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          height: MediaQuery.of(context).size.height * 0.44,
+          height: MediaQuery.of(context).size.height *
+              (role == 'participant' ? 0.6 : 0.44),
           child: ListView.builder(
               itemCount: widget.subEvents.length,
               itemBuilder: (context, index) {

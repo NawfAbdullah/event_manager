@@ -20,7 +20,7 @@ class _CreateEventState extends State<CreateEvent> {
   final TextEditingController _controller = TextEditingController();
   File? _imgFile;
   String name = '';
-  String department = '';
+  String department = 'Department';
   String start = '';
   String end = '';
   FlutterSecureStorage storage = FlutterSecureStorage();
@@ -108,12 +108,36 @@ class _CreateEventState extends State<CreateEvent> {
               const SizedBox(
                 height: 10,
               ),
-              TextField(
-                onChanged: (value) => setState(() {
-                  department = value;
-                }),
-                decoration: kInputdecoration.copyWith(
-                    labelText: 'Department', hintText: ''),
+              DropdownMenu(
+                width: MediaQuery.of(context).size.width,
+                inputDecorationTheme: const InputDecorationTheme(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  hintStyle: TextStyle(color: Color(0xff92a95f)),
+                  labelStyle: TextStyle(color: Color(0xff92a95f)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color(0xffC5D99A), width: 2.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color(0xff92a95f), width: 3.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                ),
+                hintText: department,
+                dropdownMenuEntries: const [
+                  DropdownMenuEntry(value: 'ece', label: 'ece'),
+                  DropdownMenuEntry(value: 'cse', label: 'cse'),
+                  DropdownMenuEntry(value: 'mech', label: 'mech'),
+                  DropdownMenuEntry(value: 'biotech', label: 'biotech'),
+                ],
+                onSelected: (value) {
+                  setState(() {
+                    department = value!;
+                  });
+                },
               ),
               const SizedBox(
                 height: 10,
@@ -170,7 +194,10 @@ class _CreateEventState extends State<CreateEvent> {
                     final parsed = jsonDecode(response.body);
                     EventModel x = EventModel.fromJson(parsed);
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Event(eventModel: x)));
+                        builder: (context) => Event(
+                              eventModel: x,
+                              role: 'studentcoordinator',
+                            )));
                   } else {
                     print(response.body);
                     setState(() {

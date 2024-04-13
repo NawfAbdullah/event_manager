@@ -9,8 +9,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Event extends StatefulWidget {
-  const Event({super.key, required this.eventModel});
+  const Event({super.key, required this.eventModel, required this.role});
   final EventModel eventModel;
+  final String role;
   @override
   State<Event> createState() => _EventState();
 }
@@ -41,7 +42,8 @@ class _EventState extends State<Event> {
     print('sosfofesdf');
     print(widget.eventModel.subevents);
     screens = [
-      MainEventScreen(fullEvent: fullEvent, eventModel: widget.eventModel),
+      MainEventScreen(
+          fullEvent: fullEvent, eventModel: widget.eventModel, role: role),
       ListOfMembers(event: widget.eventModel),
       Container(
         child: id == widget.eventModel.studentId
@@ -137,7 +139,10 @@ class _EventState extends State<Event> {
 
 class MainEventScreen extends StatelessWidget {
   MainEventScreen(
-      {super.key, required this.fullEvent, required this.eventModel});
+      {super.key,
+      required this.fullEvent,
+      required this.eventModel,
+      required this.role});
   Future<EventModel> fullEvent;
   EventModel eventModel;
   List<String> months = [
@@ -154,6 +159,7 @@ class MainEventScreen extends StatelessWidget {
     'Nov',
     'Dec'
   ];
+  String role;
 
   @override
   Widget build(BuildContext context) {
@@ -198,8 +204,10 @@ class MainEventScreen extends StatelessWidget {
                         } else if (snapshot.hasData) {
                           return Container(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.5,
+                            height: MediaQuery.of(context).size.height *
+                                (role == 'participant' ? 0.54 : 0.5),
                             child: SubEvent(
+                              role: role,
                               subEvents: eventModel.subevents,
                               event: eventModel,
                             ),

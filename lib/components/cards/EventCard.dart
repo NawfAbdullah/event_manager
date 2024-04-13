@@ -2,9 +2,11 @@ import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/screens/event/event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class EventCard extends StatelessWidget {
   EventCard({required this.eventModel});
+  FlutterSecureStorage storage = FlutterSecureStorage();
   final EventModel eventModel;
   List<String> months = [
     'Jan',
@@ -31,10 +33,12 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        final role = await storage.read(key: 'role');
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Event(
                   eventModel: eventModel,
+                  role: role ?? '',
                 )));
       },
       child: Container(
@@ -47,12 +51,12 @@ class EventCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 width: 50,
                 height: 50,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Color(0xffFCFFF1),
+                  color: const Color(0xffFCFFF1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Image.asset(

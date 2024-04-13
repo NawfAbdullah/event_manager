@@ -3,6 +3,7 @@ import 'package:event_manager/components/cards/TheCard.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/EventModel.dart';
 import 'package:event_manager/models/UserModel.dart';
+import 'package:event_manager/screens/event/calendar_events.dart';
 import 'package:event_manager/screens/event/create_event.dart';
 import 'package:event_manager/screens/profile.dart';
 import 'package:event_manager/screens/scanner/scanner.dart';
@@ -33,7 +34,7 @@ class _EventScreenState extends State<EventScreen> {
               ),
               Scanner(),
               CreateEvent(),
-              MainEvent(),
+              CalendarEvent(),
               Profile(),
             ]
           : widget.role == 'participant'
@@ -124,7 +125,6 @@ class _MainEventState extends State<MainEvent> {
   Future<List<EventModel>> events = fetchAllEvents();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

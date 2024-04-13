@@ -28,6 +28,8 @@ class InvitationModel {
         onDate = DateTime.parse(json['invitation_made_date']);
 }
 
+//{_id: 66149504fd5e9ba98f1cf9f4, invitation_to: {_id: 66143972fd5e9ba98f1cf886, type: volunteer, email: volun2@gmail.com, name: Fateen, profile: null}, from_event: {_id: 66148b06fd5e9ba98f1cf912, name: Archane}, from_sub_event: null, position: treasurer, status: waiting, invitation_made_date: 2024-04-08T17:28:26.829Z, invitation_response_date: null}
+
 Future<List<InvitationModel>> getAllInvitation() async {
   FlutterSecureStorage storage = FlutterSecureStorage();
   final id = await storage.read(key: 'sessionId');
@@ -40,6 +42,7 @@ Future<List<InvitationModel>> getAllInvitation() async {
   List<InvitationModel> invitations = [];
   if (response.statusCode == 200) {
     final parsedJson = jsonDecode(response.body);
+    print(parsedJson);
     for (var i in parsedJson) {
       InvitationModel x = InvitationModel.fromJson(i);
       if (x.status == "waiting") {

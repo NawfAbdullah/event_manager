@@ -169,7 +169,10 @@ class _AddSubEventState extends State<AddSubEvent> {
                           Navigator.pop(context);
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) {
-                              return Event(eventModel: widget.event);
+                              return Event(
+                                eventModel: widget.event,
+                                role: 'studentcoordinator',
+                              );
                             },
                           ));
                         } else {

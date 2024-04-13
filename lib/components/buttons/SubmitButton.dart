@@ -11,15 +11,15 @@ class SubmitButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(),
       child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        decoration: const BoxDecoration(
+            color: Color(0xff92a95f),
+            borderRadius: BorderRadius.all(Radius.circular(32))),
         child: Text(
           innerText,
           style: kSendButtonTextStyle,
           textAlign: TextAlign.center,
         ),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        decoration: BoxDecoration(
-            color: Color(0xff92a95f),
-            borderRadius: BorderRadius.all(Radius.circular(32))),
       ),
     );
   }

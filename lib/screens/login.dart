@@ -3,6 +3,7 @@ import 'package:event_manager/components/buttons/SubmitButton.dart';
 import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/event/events.dart';
+import 'package:event_manager/screens/user/changedetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -116,9 +117,19 @@ class _loginScreenState extends State<loginScreen> {
                         value: body['session_token'],
                       );
                       User user = await getUser();
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              EventScreen(role: user.role, user: user)));
+
+                      if (body["newly_created_user"]) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ChangeDetails(
+                                sessionId: body['session_token'], user: user)));
+                      } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EventScreen(role: user.role, user: user),
+                          ),
+                        );
+                      }
                     } else {
                       setState(() {
                         isLoading = false;
@@ -133,3 +144,4 @@ class _loginScreenState extends State<loginScreen> {
     );
   }
 }
+//<a href="https://www.flaticon.com/free-icons/login" title="login icons">Login icons created by monkik - Flaticon</a>
