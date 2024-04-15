@@ -31,7 +31,7 @@ class ProfileIcon extends StatelessWidget {
           Positioned(
               left: 20,
               child: Container(
-                padding: EdgeInsets.all(2),
+                padding: const EdgeInsets.all(2),
                 width: 30,
                 height: 30,
                 decoration: BoxDecoration(

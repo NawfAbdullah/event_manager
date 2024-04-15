@@ -74,7 +74,7 @@ class EventCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 20),
                   ),
                   Text(
-                    '${eventModel.start.day} ${months[eventModel.start.month]} ${eventModel.end != eventModel.start ? '-' : ''} ${eventModel.end != eventModel.start ? eventModel.end.day : ''} ${eventModel.end != eventModel.start ? months[eventModel.end.month] : ''}',
+                    '${eventModel.start.day} ${months[eventModel.start.month - 1]} ${eventModel.end != eventModel.start ? '-' : ''} ${eventModel.end != eventModel.start ? eventModel.end.day : ''} ${eventModel.end != eventModel.start ? months[eventModel.end.month - 1] : ''}',
                     style: const TextStyle(
                       fontSize: 15,
                       color: Color.fromARGB(255, 158, 148, 148),

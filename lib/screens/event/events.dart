@@ -7,6 +7,7 @@ import 'package:event_manager/screens/event/calendar_events.dart';
 import 'package:event_manager/screens/event/create_event.dart';
 import 'package:event_manager/screens/profile.dart';
 import 'package:event_manager/screens/scanner/scanner.dart';
+import 'package:event_manager/screens/user/create_coordinator.dart';
 import 'package:flutter/material.dart';
 
 class EventScreen extends StatefulWidget {
@@ -27,13 +28,17 @@ class _EventScreenState extends State<EventScreen> {
     // TODO: implement initState
     super.initState();
     setState(() {
-      screens = widget.role == 'studentcoordinator'
+      screens = widget.role == 'studentcoordinator' ||
+              widget.role == "hod" ||
+              widget.role == "dean"
           ? [
               MyEvents(
                 user: widget.user,
               ),
               Scanner(),
-              CreateEvent(),
+              widget.role == 'studentcoordinator'
+                  ? CreateEvent()
+                  : CreateStudentCoordinator(),
               CalendarEvent(),
               Profile(),
             ]
@@ -76,7 +81,9 @@ class _EventScreenState extends State<EventScreen> {
               current_index = value;
             });
           },
-          items: widget.role == 'studentcoordinator'
+          items: widget.role == 'studentcoordinator' ||
+                  widget.role == "hod" ||
+                  widget.role == "dean"
               ? [
                   const BottomNavigationBarItem(
                       icon: Icon(Icons.home), label: 'Home'),

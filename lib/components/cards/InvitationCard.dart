@@ -95,11 +95,11 @@ class _InvitationCardState extends State<InvitationCard> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: !isDone
                                     ? [
-                                        Icon(
+                                        const Icon(
                                           Icons.add_moderator_outlined,
                                           color: Colors.white,
                                         ),
-                                        Text(
+                                        const Text(
                                           'Accept',
                                           style: TextStyle(
                                             color: Colors.white,

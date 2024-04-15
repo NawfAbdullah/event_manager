@@ -4,13 +4,15 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
 class User {
-  User({required this.name, email, department, id, required this.role});
+  User(
+      {required this.name, email, department, id, required this.role, contact});
   String name;
   late String email;
   String role;
   late String sessionId;
   late String id;
   late List<dynamic> myEvents = [];
+  late String contact;
 
   User.fromJSON(Map<String, dynamic> json)
       : name = json['name'] ?? '',
@@ -22,7 +24,9 @@ class User {
             (json["events_as_treasurer"] ?? []) +
             (json["events_as_volunteer"] ?? []) +
             (json['events_as_hod'] ?? []) +
-            (json['events_as_participant'] ?? []);
+            (json['events_as_participant'] ?? []) +
+            (json['events_as_dean'] ?? []),
+        contact = json["contact_no"] ?? '';
 }
 
 class KuttyUser {
@@ -50,6 +54,7 @@ Future<void> saveCurrentUser(User user) async {
     await storage.write(key: 'email', value: user.email);
     await storage.write(key: 'role', value: user.role);
     await storage.write(key: 'my_events', value: user.myEvents.toString());
+    storage.write(key: 'contact', value: user.contact);
   } catch (err) {
     print(err);
   }

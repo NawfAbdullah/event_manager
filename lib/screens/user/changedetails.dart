@@ -5,6 +5,7 @@ import 'package:event_manager/constants/constants.dart';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:event_manager/screens/event/events.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
 class ChangeDetails extends StatefulWidget {
@@ -16,6 +17,7 @@ class ChangeDetails extends StatefulWidget {
 }
 
 class _ChangeDetailsState extends State<ChangeDetails> {
+  final storage = FlutterSecureStorage();
   String name = '';
   String contact = '';
   String err = '';
@@ -80,6 +82,8 @@ class _ChangeDetailsState extends State<ChangeDetails> {
                     isLoading = false;
                   });
                   if (result.statusCode == 200) {
+                    await storage.write(key: 'name', value: name);
+                    await storage.write(key: 'contact', value: contact);
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => EventScreen(
                           role: widget.user.role, user: widget.user),
