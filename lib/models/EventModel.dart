@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:event_manager/models/UserModel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -124,6 +125,8 @@ Future<List<EventModel>> fetchMyEvents() async {
   List<String> parsedIds = [];
   if (response.statusCode == 200) {
     User user = User.fromJSON(jsonDecode(response.body));
+    user.myEvents = LinkedHashSet<String>.from(user.myEvents).toList();
+
     await saveCurrentUser(user);
 
     if (user.myEvents.length > 0) {
