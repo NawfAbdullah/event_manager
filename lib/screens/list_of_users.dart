@@ -79,6 +79,14 @@ class _ListItemState extends State<ListItem> {
   String text = '';
   String error = '';
   String subEventId = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    text = 'Invite as $position';
+  }
+
   @override
   Widget build(BuildContext context) {
     print('buruuuc');
@@ -93,11 +101,9 @@ class _ListItemState extends State<ListItem> {
               child: Text(e.name),
             ))
         .toList();
-    print(items);
-    text = 'Invite as $position';
     return ListTile(
       title: Text(widget.curr_user.name),
-      subtitle: position == 'eventmanager'
+      subtitle: position == 'eventmanager' || position == 'volunteer'
           ? DropdownButton(
               hint: Text('Sub Event'),
               style: const TextStyle(color: Colors.black),
@@ -113,16 +119,21 @@ class _ListItemState extends State<ListItem> {
           onLongPress: () {
             setState(() {
               position = position == 'treasurer' ? 'volunteer' : 'treasurer';
+              text = 'invite as $position';
             });
           },
           onDoubleTap: () {
             setState(() {
               position = 'eventmanager';
+              text = 'Invite a event manager';
             });
           },
           onTap: () async {
+            print('started');
             FlutterSecureStorage storage = FlutterSecureStorage();
-            final id = await storage.read(key: 'sessionId');
+            final idx = await storage.read(key: 'sessionId');
+            print('check point 1');
+            print(idx ?? 'cc');
             final response = await post(
                 Uri.parse(
                   'https://event-management-backend.up.railway.app/api/invitation/create-invitation',
@@ -135,18 +146,21 @@ class _ListItemState extends State<ListItem> {
                 }),
                 headers: {
                   'Content-type': 'application/json',
-                  'session_token': id ?? ''
+                  'session_token': idx ?? ''
                 });
             print(response.statusCode);
             print(response.body);
+            print('check point 2');
             if (response.statusCode == 200) {
+              print('check point 3');
               setState(() {
                 text = 'Sent';
                 invited = true;
               });
             } else {
+              print('checkpiint 4');
               setState(() {
-                text = 'Invited as $position';
+                text = 'Already has role';
               });
             }
           },
